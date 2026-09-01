@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Кариера — Кодбилим</title>
-<meta name="description" content="Курсту аяктагандан кийин жумуш издөө, резюме, портфолио жана интервьюга даярдануу боюнча кеңештер жана шилтемелер.">
+<meta name="description" content="Frontend developer болуп жумушка кирүүгө этап-этабы менен даярдануу: skills, portfolio, GitHub, резюме, интервью жана жумуш издөө.">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -17,7 +17,7 @@
       <a href="index.html" data-kg="Тааныштыруу" data-ru="Знакомство">Тааныштыруу</a>
       <a href="programma.html" data-kg="Программа" data-ru="Программа">Программа</a>
       <a href="resources.html" data-kg="Пайдалуу сайттар" data-ru="Полезные сайты">Пайдалуу сайттар</a>
-      <a href="career.html" data-kg="Кариера" data-ru="Карьера">Кариера</a>
+      <a href="career.html" class="active" data-kg="Кариера" data-ru="Карьера">Кариера</a>
     </nav>
     <div class="nav-right">
       <div class="lang-toggle">
@@ -31,15 +31,143 @@
 <section class="hero" style="padding:52px 0;">
   <div class="container">
     <span class="eyebrow" data-kg="КИЙИНКИ ЭТАП" data-ru="СЛЕДУЮЩИЙ ЭТАП">КИЙИНКИ ЭТАП</span>
-    <h1 data-kg="Курстан кийин: жумуш издөө" data-ru="После курса: поиск работы">Курстан кийин: жумуш издөө</h1>
-    <p data-kg="Курсту аяктадыңыз — эми GitHub'уңуздагы долбоорлорду иштин ичине айландыруунун кези келди. Бул бетте кайда жумуш издөө керектигин, резюмени кантип түзүүнү жана интервьюга кантип даярданууну табасыз." data-ru="Курс завершён — теперь пора превратить проекты на GitHub в реальную работу. На этой странице вы найдёте, где искать работу, как составить резюме и как готовиться к собеседованию.">Курсту аяктадыңыз — эми долбоорлорду иштин ичине айландыруунун кези келди.</p>
+    <h1 data-kg="Frontend developer болуп жумушка кирүү" data-ru="Как устроиться frontend-разработчиком">Frontend developer болуп жумушка кирүү</h1>
+    <p data-kg="Курсту аяктадыңыз — эми GitHub'уңуздагы долбоорлорду иштин ичине айландыруунун кези келди. Бул бетте skills, portfolio, GitHub, резюме, интервью жана жумуш издөө боюнча этап-этабы менен маалымат табасыз." data-ru="Курс завершён — теперь пора превратить проекты на GitHub в реальную работу. На этой странице вы найдёте пошаговую информацию про skills, portfolio, GitHub, резюме, интервью и поиск работы.">Курсту аяктадыңыз — эми долбоорлорду иштин ичине айландыруунун кези келди.</p>
   </div>
 </section>
 
 <section class="tight">
 <div class="container">
 
-  <div class="section-head">
+  <!-- ===== CHECKLIST ===== -->
+  <div class="lesson-block" style="margin-top:0;">
+    <h3 data-kg="✅ Junior Frontend Developer Job Checklist" data-ru="✅ Junior Frontend Developer Job Checklist">✅ Junior Frontend Developer Job Checklist</h3>
+    <p data-kg="Ушул тизме менен өзүңүздүн даярдыгыңызды текшериңиз — ар бир пунктту курс бүткөндөн кийин белгилей аласыз." data-ru="Проверьте свою готовность по этому списку — каждый пункт можно отметить после прохождения курса.">Ушул тизме менен өзүңүздүн даярдыгыңызды текшериңиз.</p>
+    <ul class="checklist">
+      <li><span class="box"></span><div><span class="ttl">HTML</span><span class="desc" data-kg="Семантикалык тегдер, формалар, версткага толук ынак" data-ru="Семантические теги, формы, уверенная вёрстка">Семантикалык тегдер, формалар, версткага толук ынак</span></div></li>
+      <li><span class="box"></span><div><span class="ttl">CSS</span><span class="desc" data-kg="Flexbox, Grid, responsive дизайн, Bootstrap" data-ru="Flexbox, Grid, responsive дизайн, Bootstrap">Flexbox, Grid, responsive дизайн, Bootstrap</span></div></li>
+      <li><span class="box"></span><div><span class="ttl">JavaScript</span><span class="desc" data-kg="Функциялар, массив методдору, DOM, async/await, fetch" data-ru="Функции, методы массивов, DOM, async/await, fetch">Функциялар, массив методдору, DOM, async/await, fetch</span></div></li>
+      <li><span class="box"></span><div><span class="ttl">Git</span><span class="desc" data-kg="init, add, commit, push, branch, merge, Pull Request" data-ru="init, add, commit, push, branch, merge, Pull Request">init, add, commit, push, branch, merge, Pull Request</span></div></li>
+      <li><span class="box"></span><div><span class="ttl">GitHub</span><span class="desc" data-kg="Тактап толтурулган профиль, репозиторийлер, README'лер" data-ru="Аккуратно заполненный профиль, репозитории, README">Тактап толтурулган профиль, репозиторийлер, README'лер</span></div></li>
+      <li><span class="box"></span><div><span class="ttl">React</span><span class="desc" data-kg="Компоненттер, hooks, Router, Firebase менен иштөө" data-ru="Компоненты, hooks, Router, работа с Firebase">Компоненттер, hooks, Router, Firebase менен иштөө</span></div></li>
+      <li><span class="box"></span><div><span class="ttl" data-kg="2–4 реалдуу долбоор" data-ru="2–4 реальных проекта">2–4 реалдуу долбоор</span><span class="desc" data-kg="Live шилтемеси иштеген, GitHub'да коммит тарыхы бар" data-ru="С работающей live-ссылкой и историей коммитов на GitHub">Live шилтемеси иштеген, GitHub'да коммит тарыхы бар</span></div></li>
+      <li><span class="box"></span><div><span class="ttl">Portfolio</span><span class="desc" data-kg="Долбоорлоруңузду көрсөткөн жеке сайт же GitHub профили" data-ru="Личный сайт или профиль GitHub, показывающий ваши проекты">Долбоорлоруңузду көрсөткөн жеке сайт же GitHub профили</span></div></li>
+      <li><span class="box"></span><div><span class="ttl">Resume / CV</span><span class="desc" data-kg="Кыска, так, ролуңуз жана натыйжаңыз көрсөтүлгөн резюме" data-ru="Краткое, точное резюме с указанием роли и результата">Кыска, так, ролуңуз жана натыйжаңыз көрсөтүлгөн резюме</span></div></li>
+      <li><span class="box"></span><div><span class="ttl" data-kg="Interview preparation" data-ru="Подготовка к интервью">Interview preparation</span><span class="desc" data-kg="Mock interview өтүлгөн, көп берилүүчү суроолорго даяр" data-ru="Пройден mock interview, готовы к частым вопросам">Mock interview өтүлгөн, көп берилүүчү суроолорго даяр</span></div></li>
+    </ul>
+  </div>
+
+  <!-- ===== 1. SKILLS ===== -->
+  <div class="section-head" style="margin-top:44px;">
+    <span class="eyebrow" data-kg="1-КАДАМ" data-ru="ШАГ 1">1-КАДАМ</span>
+    <h2 data-kg="Skills — кандай технологияларды билиш керек" data-ru="Skills — какие технологии нужно знать">Skills — кандай технологияларды билиш керек</h2>
+    <p data-kg="Junior frontend позициясына арыз бергенде компаниялар көбүнчө төмөнкүлөрдү текшерет." data-ru="При отклике на junior frontend позицию компании чаще всего проверяют следующее.">Junior frontend позициясына арыз бергенде компаниялар көбүнчө төмөнкүлөрдү текшерет.</p>
+  </div>
+  <div class="pill-list">
+    <span class="pill">HTML</span>
+    <span class="pill">CSS</span>
+    <span class="pill">Bootstrap</span>
+    <span class="pill">JavaScript</span>
+    <span class="pill">Git</span>
+    <span class="pill">GitHub</span>
+    <span class="pill">React</span>
+    <span class="pill">Firebase</span>
+    <span class="pill" data-kg="Responsive дизайн" data-ru="Responsive дизайн">Responsive дизайн</span>
+    <span class="pill" data-kg="Fetch / API" data-ru="Fetch / API">Fetch / API</span>
+  </div>
+
+  <!-- ===== 2. PORTFOLIO ===== -->
+  <div class="section-head" style="margin-top:44px;">
+    <span class="eyebrow" data-kg="2-КАДАМ" data-ru="ШАГ 2">2-КАДАМ</span>
+    <h2 data-kg="Portfolio — долбоорлоруңузду көрсөтүү" data-ru="Portfolio — как показать свои проекты">Portfolio — долбоорлоруңузду көрсөтүү</h2>
+  </div>
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="icon">🧩</div>
+      <h3 data-kg="Канча долбоор керек" data-ru="Сколько нужно проектов">Канча долбоор керек</h3>
+      <p data-kg="Кеминде 2–4 реалдуу долбоор жетиштүү: 1 HTML/CSS долбоору, 1 JavaScript логикасы бар долбоор жана 1–2 React долбоору (алардын бири Firebase колдонсо жакшы)." data-ru="Достаточно минимум 2–4 реальных проекта: 1 проект на HTML/CSS, 1 проект с логикой JavaScript и 1–2 проекта на React (желательно, чтобы один использовал Firebase).">Кеминде 2–4 реалдуу долбоор: HTML/CSS, JS логикасы, React (Firebase менен).</p>
+    </div>
+    <div class="card">
+      <div class="icon">✨</div>
+      <h3 data-kg="Ар бир долбоор кандай болушу керек" data-ru="Каким должен быть каждый проект">Ар бир долбоор кандай болушу керек</h3>
+      <p data-kg="Иштеген live шилтемеси болушу керек (Vercel/GitHub Pages), responsive болушу керек, README'де долбоор эмне жана кандай технологиялар менен жасалганы жазылышы керек." data-ru="Должна быть рабочая live-ссылка (Vercel/GitHub Pages), должен быть responsive, в README должно быть написано, что это за проект и на каких технологиях сделан.">Live шилтеме, responsive, README'де технологиялар жазылган болушу керек.</p>
+    </div>
+  </div>
+  <div class="pill-list" style="margin-top:22px;">
+    <span class="pill" data-kg="✅ Live демо шилтемеси" data-ru="✅ Ссылка на live демо">✅ Live демо шилтемеси</span>
+    <span class="pill" data-kg="✅ README жазылган" data-ru="✅ Написан README">✅ README жазылган</span>
+    <span class="pill" data-kg="✅ Responsive" data-ru="✅ Responsive">✅ Responsive</span>
+    <span class="pill" data-kg="✅ Таза, окулуучу код" data-ru="✅ Чистый, читаемый код">✅ Таза, окулуучу код</span>
+  </div>
+
+  <!-- ===== 3. GITHUB ===== -->
+  <div class="section-head" style="margin-top:44px;">
+    <span class="eyebrow" data-kg="3-КАДАМ" data-ru="ШАГ 3">3-КАДАМ</span>
+    <h2 data-kg="GitHub профили" data-ru="Профиль GitHub">GitHub профили</h2>
+  </div>
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="icon">🐙</div>
+      <h3 data-kg="Эмне үчүн керек" data-ru="Для чего нужен">Эмне үчүн керек</h3>
+      <p data-kg="GitHub профили сиздин «онлайн резюмеңиз» — работодателдер көбүнчө резюме менен бирге GitHub'ду да карашат. Ал жерде сиздин чыныгы код жазуу стилиңиз, коммит тарыхыңыз жана долбоорлоруңуз көрүнөт." data-ru="Профиль GitHub — это ваше «онлайн-резюме». Работодатели часто вместе с резюме смотрят и GitHub. Там видно, как вы реально пишете код, историю коммитов и ваши проекты.">GitHub — сиздин «онлайн резюмеңиз», работодателдер аны текшерет.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🧹</div>
+      <h3 data-kg="Кантип жакшы алып жүрүү керек" data-ru="Как правильно вести">Кантип жакшы алып жүрүү керек</h3>
+      <p data-kg="Профилдин сүрөтү жана кыска сипаттамасы (bio) болсун, эң жакшы долбоорлоруңузду pin кылыңыз, ар бир репозиторийге README жазыңыз, коммит билдирүүлөрүн так жазыңыз (мисалы «fix: header responsive эмес болчу»)." data-ru="Добавьте фото профиля и краткое описание (bio), закрепите (pin) лучшие проекты, пишите README к каждому репозиторию, делайте понятные commit-сообщения (например «fix: header не был responsive»).">Сүрөт+bio коюңуз, эң жакшы долбоорлорду pin кылыңыз, README жазыңыз.</p>
+    </div>
+  </div>
+
+  <!-- ===== 4. RESUME ===== -->
+  <div class="section-head" style="margin-top:44px;">
+    <span class="eyebrow" data-kg="4-КАДАМ" data-ru="ШАГ 4">4-КАДАМ</span>
+    <h2 data-kg="Resume / CV" data-ru="Resume / CV">Resume / CV</h2>
+  </div>
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="icon">✅</div>
+      <h3 data-kg="Эмне жазуу керек" data-ru="Что нужно писать">Эмне жазуу керек</h3>
+      <p data-kg="Байланыш маалыматы (email, телефон, GitHub, LinkedIn), 2–3 сүйлөмдүк кыска маалымат өзүңүз жөнүндө, көндүмдөрдүн тизмеси (категория боюнча топтолгон), долбоорлор (аталышы + технологиялар + live/GitHub шилтемеси), билим (курс жөнүндө)." data-ru="Контактная информация (email, телефон, GitHub, LinkedIn), краткое описание себя (2–3 предложения), список навыков (сгруппированный по категориям), проекты (название + технологии + ссылка live/GitHub), образование (о курсе).">Байланыш, кыска маалымат, көндүмдөр, долбоорлор, билим.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🚫</div>
+      <h3 data-kg="Эмнени жазбоо керек" data-ru="Чего не нужно писать">Эмнени жазбоо керек</h3>
+      <p data-kg="Болбогон тажрыйбаны ойлоп таппаңыз, керексиз жеке маалымат (үй-бүлөлүк абал ж.б.) жазбаңыз, узун сүрөттөмө/абзацтарды жазбаңыз — resume 1 бетте болушу керек, ар бир майда билген технологияны тизмелебеңиз." data-ru="Не придумывайте несуществующий опыт, не пишите лишнюю личную информацию (семейное положение и т.п.), не пишите длинные абзацы — резюме должно быть на 1 странице, не перечисляйте каждую мелкую технологию, которую немного знаете.">Ойдон чыгарылган тажрыйба, узун абзацтар, керексиз маалымат болбосун.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🌱</div>
+      <h3 data-kg="Тажрыйба жок болсо эмне кылуу керек" data-ru="Что делать, если нет опыта">Тажрыйба жок болсо эмне кылуу керек</h3>
+      <p data-kg="«Иш тажрыйбасы» ордуна долбоорлорго жана курска басым жасаңыз: «Projects» бөлүмүн «Experience»дан жогору коюңуз, курстун акырындагы командалык долбоорду да ролуңуз менен көрсөтүңүз." data-ru="Вместо «опыта работы» делайте акцент на проектах и курсе: раздел «Projects» ставьте выше «Experience», покажите и командный проект в конце курса с указанием своей роли.">Долбоорлорго жана курска басым жасаңыз, «Experience»дин ордуна «Projects».</p>
+    </div>
+    <div class="card">
+      <div class="icon">🧠</div>
+      <h3 data-kg="Skills кантип жазылат" data-ru="Как пишутся Skills">Skills кантип жазылат</h3>
+      <p data-kg="Категория боюнча топтоп жазыңыз: «Frontend: HTML, CSS, JavaScript, React», «Tools: Git, GitHub, Figma». Билбеген нерсени коспоңуз — интервьюда так ошол жерден суроо беришет." data-ru="Группируйте по категориям: «Frontend: HTML, CSS, JavaScript, React», «Tools: Git, GitHub, Figma». Не добавляйте то, чего не знаете — на интервью спросят именно про это.">Категория боюнча топтоп жазыңыз, билбеген нерсени коспоңуз.</p>
+    </div>
+  </div>
+  <div class="card" style="margin-top:22px;">
+    <div class="icon">📁</div>
+    <h3 data-kg="Долбоорлор кантип көрсөтүлөт" data-ru="Как показываются проекты">Долбоорлор кантип көрсөтүлөт</h3>
+    <p data-kg="Ар бир долбоорго 2–3 сүйлөм жетиштүү: долбоордун аталышы, эмне кылат (мисалы, «Firebase Authentication менен катталуу/кирүү функциясы бар to-do app»), колдонулган технологиялар, live жана GitHub шилтемелери." data-ru="Для каждого проекта достаточно 2–3 предложения: название проекта, что он делает (например, «to-do app с регистрацией/входом через Firebase Authentication»), использованные технологии, ссылки на live и GitHub.">Аталышы, эмне кылат, технологиялар, live/GitHub шилтемелери — 2-3 сүйлөм.</p>
+  </div>
+
+  <!-- ===== 5. INTERVIEW ===== -->
+  <div class="section-head" style="margin-top:44px;">
+    <span class="eyebrow" data-kg="5-КАДАМ" data-ru="ШАГ 5">5-КАДАМ</span>
+    <h2 data-kg="Интервьюга даярдануу" data-ru="Подготовка к собеседованию">Интервьюга даярдануу</h2>
+  </div>
+  <div class="card">
+    <p data-kg="Junior+ интервьюда көбүнчө HTML/CSS/JS негиздери, React түшүнүктөрү (компоненттер, hooks, props/state) жана кичине алгоритмдик суроолор берилет. Кээде «бул CSS'тен эмне чыгат?» же «эмне үчүн бул код иштебейт?» сыяктуу практикалык суроолор да болот. Mock interview (досуңуз менен же өзүңүз алдын ала) — эң жакшы даярдануу ыкмасы." data-ru="На junior+ собеседовании обычно спрашивают основы HTML/CSS/JS, концепции React (компоненты, hooks, props/state) и небольшие алгоритмические задачи. Иногда бывают и практические вопросы вроде «что выведет этот CSS?» или «почему этот код не работает?». Mock interview (с другом или заранее самостоятельно) — лучший способ подготовиться.">Junior+ интервьюда HTML/CSS/JS, React жана алгоритм суроолору берилет. Mock interview — эң жакшы ыкма.</p>
+    <div class="res-links" style="margin-top:14px;">
+      <div class="res-link"><a href="https://github.com/h5bp/Front-end-Developer-Interview-Questions" target="_blank" rel="noopener">Front-end Interview Questions</a><span data-kg="Көп берилүүчү суроолордун жыйнагы" data-ru="Сборник частых вопросов">Көп берилүүчү суроолор</span></div>
+      <div class="res-link"><a href="https://roadmap.sh/frontend" target="_blank" rel="noopener">roadmap.sh</a><span data-kg="Билим боштуктарын текшерүү үчүн" data-ru="Чтобы проверить пробелы в знаниях">Билим боштуктарын текшерүү</span></div>
+      <div class="res-link"><a href="https://leetcode.com/" target="_blank" rel="noopener">LeetCode</a><span data-kg="Алгоритмдик суроолорго машыгуу" data-ru="Тренировка алгоритмических задач">Алгоритм суроолоруна машыгуу</span></div>
+    </div>
+  </div>
+
+  <!-- ===== 6. JOB SEARCH ===== -->
+  <div class="section-head" style="margin-top:44px;">
+    <span class="eyebrow" data-kg="6-КАДАМ" data-ru="ШАГ 6">6-КАДАМ</span>
     <h2 data-kg="Кайда жумуш издөө керек" data-ru="Где искать работу">Кайда жумуш издөө керек</h2>
   </div>
 
@@ -74,26 +202,10 @@
     </div>
   </div>
 
-  <div class="grid grid-2" style="margin-top:40px;">
-    <div class="card">
-      <div class="icon">📄</div>
-      <h3 data-kg="Резюме жана портфолио" data-ru="Резюме и портфолио">Резюме жана портфолио</h3>
-      <p data-kg="GitHub профилиңизде 3+ реалдуу долбоор жана иштеген (live) шилтемелер болушу керек. Резюмеге кыска, конкреттүү жазыңыз: технологиялар, долбоордогу ролуңуз, натыйжа." data-ru="На вашем GitHub должно быть 3+ реальных проекта с рабочими (live) ссылками. В резюме пишите кратко и конкретно: технологии, ваша роль в проекте, результат.">GitHub профилиңизде 3+ реалдуу долбоор жана иштеген шилтемелер болушу керек.</p>
-      <div class="pill-list" style="margin-top:14px;">
-        <span class="pill" data-kg="README жазуу маанилүү" data-ru="Важно писать README">README жазуу маанилүү</span>
-        <span class="pill" data-kg="Live демо шилтемеси" data-ru="Ссылка на live демо">Live демо шилтемеси</span>
-      </div>
-    </div>
-    <div class="card">
-      <div class="icon">🎤</div>
-      <h3 data-kg="Интервьюга даярдануу" data-ru="Подготовка к собеседованию">Интервьюга даярдануу</h3>
-      <p data-kg="Junior+ интервьюда көбүнчө HTML/CSS/JS негиздери, React түшүнүктөрү жана кичине алгоритмдик суроолор берилет. Mock interview өтүү — эң жакшы даярдануу ыкмасы." data-ru="На junior+ собеседовании обычно спрашивают основы HTML/CSS/JS, концепции React и небольшие алгоритмические задачи. Mock interview — лучший способ подготовиться.">Junior+ интервьюда HTML/CSS/JS, React жана алгоритм суроолору берилет.</p>
-      <div class="res-links" style="margin-top:14px;">
-        <div class="res-link"><a href="https://github.com/h5bp/Front-end-Developer-Interview-Questions" target="_blank" rel="noopener">Front-end Interview Questions</a><span data-kg="Көп берилүүчү суроолордун жыйнагы" data-ru="Сборник частых вопросов">Көп берилүүчү суроолор</span></div>
-        <div class="res-link"><a href="https://roadmap.sh/frontend" target="_blank" rel="noopener">roadmap.sh</a><span data-kg="Билим боштуктарын текшерүү үчүн" data-ru="Чтобы проверить пробелы в знаниях">Билим боштуктарын текшерүү</span></div>
-        <div class="res-link"><a href="https://leetcode.com/" target="_blank" rel="noopener">LeetCode</a><span data-kg="Алгоритмдик суроолорго машыгуу" data-ru="Тренировка алгоритмических задач">Алгоритм суроолоруна машыгуу</span></div>
-      </div>
-    </div>
+  <!-- ===== HOW THEY CONNECT ===== -->
+  <div class="lesson-block" style="margin-top:22px;">
+    <h3 data-kg="🔗 GitHub + Portfolio + Resume — кантип байланышат" data-ru="🔗 GitHub + Portfolio + Resume — как они связаны">🔗 GitHub + Portfolio + Resume — кантип байланышат</h3>
+    <p data-kg="Бул үчөө бирге иштеши керек: резюмеңизде долбоорлорду тизмелеп, ар биринин жанына portfolio сайтыңызга же GitHub репозиторийге шилтеме бересиз. Portfolio сайтыңызда ар бир долбоордун live демосу жана GitHub коду көрсөтүлөт. GitHub профилиңиз болсо резюмедеги сөздөрүңүздү далилдейт — коммит тарыхы, код сапаты, README'лер аркылуу. Ошентип, работодатель резюмеден баштап, portfolio аркылуу иштеген долбоорду көрүп, GitHub'дон кодду карай алат — үчөө бир бүтүн чынжыр түзөт." data-ru="Эти три элемента должны работать вместе: в резюме вы перечисляете проекты, и рядом с каждым даёте ссылку на портфолио-сайт или репозиторий GitHub. На портфолио-сайте показана live-демка каждого проекта и код на GitHub. Профиль GitHub подтверждает написанное в резюме — через историю коммитов, качество кода, README. Так работодатель, начав с резюме, может через портфолио увидеть работающий проект, а через GitHub — посмотреть код. Все три образуют единую цепочку.">Резюме → портфолио (live демо) → GitHub (код). Үчөө бир чынжыр түзүп, бири-бирин далилдейт.</p>
   </div>
 
   <div class="cta" style="margin-top:44px;">
