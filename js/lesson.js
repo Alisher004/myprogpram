@@ -65,6 +65,18 @@ function renderLesson() {
     }
   }
 
+  const guideBlock = document.getElementById("guide-block");
+  const guideContent = document.getElementById("guide-content");
+  const guideHtml = lang === "ru" ? lesson.guide_ru_html : lesson.guide_kg_html;
+  if (guideHtml) {
+    document.getElementById("guide-heading").textContent = lang === "ru" ? "📖 Полное руководство" : "📖 Толук колдонмо";
+    guideContent.innerHTML = guideHtml;
+    guideBlock.style.display = "";
+  } else {
+    guideContent.innerHTML = "";
+    guideBlock.style.display = "none";
+  }
+
   const linksWrap = document.getElementById("lesson-links");
   const linksBlock = document.getElementById("lesson-links-block");
   linksWrap.innerHTML = "";
