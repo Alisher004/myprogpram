@@ -488,6 +488,119 @@ a.lesson.project:hover { background: #ffefd9; }
   .cmd-table { display: block; overflow-x: auto; white-space: nowrap; }
 }
 
+/* ===== Code Playground ===== */
+#playground-block { padding: 16px; }
+.playground {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+@media (max-width: 760px) {
+  .playground { grid-template-columns: 1fr; }
+}
+.playground-panel {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--bg);
+}
+.editor-tabs {
+  display: flex;
+  gap: 2px;
+  background: var(--bg-soft);
+  padding: 3px 3px 0;
+}
+.editor-tabs button {
+  border: none;
+  background: transparent;
+  color: rgba(255,255,255,0.55);
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 6px 6px 0 0;
+  cursor: pointer;
+}
+.editor-tabs button.active { background: var(--bg); color: #d7ffe8; }
+.editor-body { position: relative; }
+.editor-body textarea {
+  display: none;
+  width: 100%;
+  height: 420px;
+  box-sizing: border-box;
+  background: var(--bg);
+  color: #d7ffe8;
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.84rem;
+  line-height: 1.6;
+  border: none;
+  outline: none;
+  resize: vertical;
+  padding: 8px 10px;
+  tab-size: 2;
+}
+.editor-body textarea.active { display: block; }
+.playground-toolbar {
+  display: flex;
+  gap: 8px;
+  padding: 6px 8px;
+  background: var(--bg-soft);
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.playground-toolbar button {
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+#run-btn { background: var(--primary); color: #fff; }
+#run-btn:hover { background: var(--primary-dark); }
+#reset-btn { background: transparent; color: rgba(255,255,255,0.6); border-color: rgba(255,255,255,0.2); }
+#reset-btn:hover { color: #fff; border-color: rgba(255,255,255,0.4); }
+
+.playground-output { background: var(--surface); }
+.output-tabs {
+  padding: 5px 10px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--text-soft);
+  background: var(--surface-alt);
+  border-bottom: 1px solid var(--border);
+}
+.preview-frame {
+  width: 100%;
+  height: 280px;
+  border: none;
+  background: #fff;
+  display: block;
+}
+.console-log {
+  max-height: 135px;
+  min-height: 40px;
+  overflow-y: auto;
+  background: #0b1120;
+  color: #d7ffe8;
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+  padding: 6px 10px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.console-log:empty::before {
+  content: attr(data-placeholder);
+  color: rgba(255,255,255,0.35);
+}
+.console-log .console-line { padding: 3px 0; border-bottom: 1px dashed rgba(255,255,255,0.08); white-space: pre-wrap; word-break: break-word; }
+.console-log .console-line:last-child { border-bottom: none; }
+.console-log .console-line.error { color: #ff8a8a; }
+.console-log .console-arrow { color: var(--primary); margin-right: 6px; }
+
 /* ===== Checklist ===== */
 .checklist { display: flex; flex-direction: column; gap: 2px; }
 .checklist li {

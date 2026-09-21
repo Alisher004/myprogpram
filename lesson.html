@@ -47,11 +47,6 @@
     <p id="video-fallback" style="text-align:center; margin:10px 0 0; font-size:0.85rem;"></p>
   </div>
 
-  <div class="lesson-block">
-    <h3 id="material-heading">📘 Сабактын материалы</h3>
-    <p id="material-text">…</p>
-  </div>
-
   <div class="lesson-block homework">
     <h3 id="homework-heading">📝 Үй тапшырма</h3>
     <p id="homework-text">…</p>
@@ -60,6 +55,25 @@
   <div class="lesson-block" id="guide-block" style="display:none;">
     <h3 id="guide-heading">📖 Толук колдонмо</h3>
     <div class="guide-content" id="guide-content"></div>
+  </div>
+
+  <div class="lesson-block" id="playground-block" style="display:none;">
+    <h3 id="playground-heading">💻 Практика</h3>
+    <div class="playground">
+      <div class="playground-panel">
+        <div class="editor-tabs" id="editor-tabs"></div>
+        <div class="editor-body" id="editor-body"></div>
+        <div class="playground-toolbar">
+          <button type="button" id="run-btn">▶ <span id="run-btn-text">Иштетүү</span></button>
+          <button type="button" id="reset-btn">↺ <span id="reset-btn-text">Баштапкыга</span></button>
+        </div>
+      </div>
+      <div class="playground-panel playground-output">
+        <div class="output-tabs"><span id="preview-tab-label">Натыйжа</span></div>
+        <iframe id="preview-frame" class="preview-frame" sandbox="allow-scripts allow-modals allow-forms" title="preview"></iframe>
+        <div class="console-log" id="console-log"></div>
+      </div>
+    </div>
   </div>
 
   <div class="lesson-block" id="lesson-links-block">
@@ -89,6 +103,7 @@
 
 <script src="js/lessons-data.js"></script>
 <script src="js/script.js"></script>
+<script src="js/playground.js"></script>
 <script src="js/lesson.js"></script>
 </body>
 </html>

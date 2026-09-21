@@ -24,7 +24,6 @@ function renderLesson() {
   }
 
   const title = lang === "ru" ? lesson.title_ru : lesson.title_kg;
-  const material = lang === "ru" ? lesson.material_ru : lesson.material_kg;
   const homework = lang === "ru" ? lesson.homework_ru : lesson.homework_kg;
   const monthLabel = lang === "ru" ? `${lesson.month}-й месяц` : `${lesson.month}-ай`;
   const weekLabel = lang === "ru" ? `${lesson.week}-я неделя` : `${lesson.week}-жума`;
@@ -34,8 +33,6 @@ function renderLesson() {
   document.getElementById("lesson-crumb").textContent = `${monthLabel} · ${weekLabel}`;
   document.getElementById("lesson-badge").textContent = lessonLabel;
   document.getElementById("lesson-title").textContent = title;
-  document.getElementById("material-heading").textContent = lang === "ru" ? "📘 Материал занятия" : "📘 Сабактын материалы";
-  document.getElementById("material-text").textContent = material;
   document.getElementById("homework-heading").textContent = lang === "ru" ? "📝 Домашнее задание" : "📝 Үй тапшырма";
   document.getElementById("homework-text").textContent = homework;
   document.getElementById("video-heading").textContent = lang === "ru" ? "🎬 Видео-урок" : "🎬 Видео сабак";
@@ -75,6 +72,10 @@ function renderLesson() {
   } else {
     guideContent.innerHTML = "";
     guideBlock.style.display = "none";
+  }
+
+  if (typeof initPlayground === "function") {
+    initPlayground(lesson, lang);
   }
 
   const linksWrap = document.getElementById("lesson-links");
