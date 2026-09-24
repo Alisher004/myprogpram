@@ -17,6 +17,8 @@
       <a href="index.html" data-kg="Тааныштыруу" data-ru="Знакомство">Тааныштыруу</a>
       <a href="programma.html" data-kg="Программа" data-ru="Программа">Программа</a>
       <a href="resources.html" data-kg="Пайдалуу сайттар" data-ru="Полезные сайты">Пайдалуу сайттар</a>
+      <a href="shpargalka.html" data-kg="Шпаргалка" data-ru="Шпаргалка">Шпаргалка</a>
+      <a href="tests.html" data-kg="Тесттер" data-ru="Тесты">Тесттер</a>
       <a href="career.html" data-kg="Кариера" data-ru="Карьера">Кариера</a>
     </nav>
     <div class="nav-right">
@@ -33,11 +35,17 @@
     <span class="eyebrow" data-kg="ТОЛУК ПРОГРАММА" data-ru="ПОЛНАЯ ПРОГРАММА">ТОЛУК ПРОГРАММА</span>
     <h1 data-kg="3 ай · 60 сабак · 120 саат" data-ru="3 месяца · 60 занятий · 120 часов">3 ай · 60 сабак · 120 саат</h1>
     <p data-kg="Ар бир сабакты басып, ошол сабактын өзүнчө барагына өтө аласыз — видео, материал жана үй тапшырма ошол жерде." data-ru="Нажмите на любое занятие, чтобы перейти на его отдельную страницу — видео, материал и домашнее задание находятся там.">Ар бир сабакты басып, ошол сабактын өзүнчө барагына өтө аласыз — видео, материал жана үй тапшырма ошол жерде.</p>
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="search" id="lesson-search" data-kg-placeholder="Сабак изде... (мисалы: Flexbox, Git, useState)" data-ru-placeholder="Поиск занятия... (например: Flexbox, Git, useState)" placeholder="Сабак изде... (мисалы: Flexbox, Git, useState)">
+    </div>
   </div>
 </section>
 
 <section class="tight">
 <div class="container">
+
+<p id="search-empty" class="search-empty" data-kg="Эч нерсе табылган жок." data-ru="Ничего не найдено." hidden>Эч нерсе табылган жок.</p>
 
 <!-- ===================== MONTH 1 ===================== -->
 <div class="month-block" id="month1">
@@ -234,14 +242,14 @@
       <a class="lesson" href="lesson.html?id=22">
         <span class="num">22</span>
         <div class="body">
-          <div class="txt" data-kg="JS: localStorage негиздери" data-ru="JS: основы localStorage">JS: localStorage негиздери</div>
+          <div class="txt" data-kg="JS: циклдер" data-ru="JS: циклы">JS: циклдер</div>
         </div>
         <span class="chevron">→</span>
       </a>
       <a class="lesson" href="lesson.html?id=23">
         <span class="num">23</span>
         <div class="body">
-          <div class="txt" data-kg="JS: циклдер" data-ru="JS: циклы">JS: циклдер</div>
+          <div class="txt" data-kg="JS: функциялар" data-ru="JS: функции">JS: функциялар</div>
         </div>
         <span class="chevron">→</span>
       </a>
@@ -253,7 +261,7 @@
       <a class="lesson" href="lesson.html?id=24">
         <span class="num">24</span>
         <div class="body">
-          <div class="txt" data-kg="JS: функциялар" data-ru="JS: функции">JS: функциялар</div>
+          <div class="txt" data-kg="setInterval / setTimeout" data-ru="setInterval / setTimeout">setInterval / setTimeout</div>
         </div>
         <span class="chevron">→</span>
       </a>
@@ -300,7 +308,7 @@
       <a class="lesson" href="lesson.html?id=30">
         <span class="num">30</span>
         <div class="body">
-          <div class="txt" data-kg="setInterval / setTimeout" data-ru="setInterval / setTimeout">setInterval / setTimeout</div>
+          <div class="txt" data-kg="JS: localStorage негиздери" data-ru="JS: основы localStorage">JS: localStorage негиздери</div>
         </div>
         <span class="chevron">→</span>
       </a>

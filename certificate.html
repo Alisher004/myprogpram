@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ky">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Сертификат — Кодбилим</title>
+<meta name="description" content="Кодбилим курсун бүткөн студент үчүн сертификат түзүү жана басып чыгаруу.">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header no-print">
+  <div class="container nav">
+    <a href="index.html" class="brand"><span class="dot"></span><span data-kg="Кодбилим" data-ru="Кодбилим">Кодбилим</span></a>
+    <button class="nav-toggle" aria-label="Меню"><span></span><span></span><span></span></button>
+    <nav class="nav-links">
+      <a href="index.html" data-kg="Тааныштыруу" data-ru="Знакомство">Тааныштыруу</a>
+      <a href="programma.html" data-kg="Программа" data-ru="Программа">Программа</a>
+      <a href="resources.html" data-kg="Пайдалуу сайттар" data-ru="Полезные сайты">Пайдалуу сайттар</a>
+      <a href="shpargalka.html" data-kg="Шпаргалка" data-ru="Шпаргалка">Шпаргалка</a>
+      <a href="tests.html" data-kg="Тесттер" data-ru="Тесты">Тесттер</a>
+      <a href="career.html" data-kg="Кариера" data-ru="Карьера">Кариера</a>
+    </nav>
+    <div class="nav-right">
+      <div class="lang-toggle">
+        <button data-lang="kg" class="active">KG</button>
+        <button data-lang="ru">RU</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="hero no-print" style="padding:52px 0;">
+  <div class="container">
+    <span class="eyebrow" data-kg="КУРСТУ БҮТҮРҮҮ" data-ru="ЗАВЕРШЕНИЕ КУРСА">КУРСТУ БҮТҮРҮҮ</span>
+    <h1 data-kg="Сертификат түзүү" data-ru="Создать сертификат">Сертификат түзүү</h1>
+    <p data-kg="Студенттин атын жазыңыз — сертификат ошол замат даярдалат. Андан кийин 'Басып чыгаруу' баскычы менен PDF катары сактай аласыз же түз басып чыгара аласыз." data-ru="Впишите имя студента — сертификат обновится сразу. Кнопкой 'Печать' можно сохранить его как PDF или распечатать напрямую.">Студенттин атын жазыңыз — сертификат ошол замат даярдалат.</p>
+  </div>
+</section>
+
+<section class="tight">
+<div class="container" style="max-width:760px;">
+
+  <div class="cert-form no-print">
+    <div class="cert-field">
+      <label for="cert-name" data-kg="Студенттин аты-жөнү" data-ru="Имя и фамилия студента">Студенттин аты-жөнү</label>
+      <input type="text" id="cert-name" data-kg-placeholder="Мисалы: Айгерим Бекова" data-ru-placeholder="Например: Айгерим Бекова" placeholder="Мисалы: Айгерим Бекова">
+    </div>
+    <div class="cert-field">
+      <label for="cert-date" data-kg="Аяктаган күнү" data-ru="Дата завершения">Аяктаган күнү</label>
+      <input type="date" id="cert-date">
+    </div>
+    <button type="button" id="cert-print-btn" class="btn btn-primary">🖨️ <span data-kg="Басып чыгаруу / PDF" data-ru="Печать / PDF">Басып чыгаруу / PDF</span></button>
+  </div>
+
+  <div class="certificate" id="certificate">
+    <div class="cert-inner">
+      <div class="cert-brand"><span class="dot"></span>Кодбилим</div>
+      <div class="cert-kicker" data-kg="СЕРТИФИКАТ" data-ru="СЕРТИФИКАТ">СЕРТИФИКАТ</div>
+      <p class="cert-lead" data-kg="Ушул документ төмөндөгү студентке берилет:" data-ru="Этот документ выдан следующему студенту:">Ушул документ төмөндөгү студентке берилет:</p>
+      <div class="cert-name" id="cert-name-display" data-kg="Студенттин аты-жөнү" data-ru="Имя и фамилия студента">Студенттин аты-жөнү</div>
+      <p class="cert-body" data-kg="«Кодбилим» Frontend курсунун толук программасын — HTML, CSS, JavaScript жана React менен 60 сабактан, 3 айлык окутуудан — ийгиликтүү аяктаганын ырастайт." data-ru="Настоящим подтверждается успешное завершение полной программы курса «Кодбилим» — 60 занятий, 3 месяца обучения HTML, CSS, JavaScript и React.">«Кодбилим» Frontend курсунун толук программасын — HTML, CSS, JavaScript жана React менен 60 сабактан, 3 айлык окутуудан — ийгиликтүү аяктаганын ырастайт.</p>
+      <div class="cert-footer">
+        <div class="cert-footer-block">
+          <div class="cert-line"></div>
+          <span id="cert-date-display">—</span>
+          <small data-kg="Күнү" data-ru="Дата">Күнү</small>
+        </div>
+        <div class="cert-seal">🎓</div>
+        <div class="cert-footer-block">
+          <div class="cert-line"></div>
+          <span data-kg="Кодбилим" data-ru="Кодбилим">Кодбилим</span>
+          <small data-kg="Курс" data-ru="Курс">Курс</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<footer class="site-footer no-print">
+  <div class="container">
+    <div class="foot-top">
+      <div class="brand"><span class="dot"></span><span data-kg="Кодбилим" data-ru="Кодбилим">Кодбилим</span></div>
+      <nav>
+        <a href="index.html" data-kg="Тааныштыруу" data-ru="Знакомство">Тааныштыруу</a>
+        <a href="programma.html" data-kg="Программа" data-ru="Программа">Программа</a>
+        <a href="resources.html" data-kg="Пайдалуу сайттар" data-ru="Полезные сайты">Пайдалуу сайттар</a>
+        <a href="career.html" data-kg="Кариера" data-ru="Карьера">Кариера</a>
+      </nav>
+    </div>
+    <p class="fine" data-kg="© 2026 Кодбилим. Бардык укуктар корголгон." data-ru="© 2026 Кодбилим. Все права защищены.">© 2026 Кодбилим.</p>
+  </div>
+</footer>
+
+<script src="js/script.js"></script>
+</body>
+</html>
