@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ky">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Шпаргалка — Кодбилим</title>
+<meta name="description" content="HTML, CSS, JavaScript жана Git боюнча тез-шилтеме: эң көп колдонулган тегдер, касиеттер, методдор жана буйруктар бир баракта.">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container nav">
+    <a href="index.html" class="brand"><span class="dot"></span><span data-kg="Кодбилим" data-ru="Кодбилим">Кодбилим</span></a>
+    <button class="nav-toggle" aria-label="Меню"><span></span><span></span><span></span></button>
+    <nav class="nav-links">
+      <a href="index.html" data-kg="Тааныштыруу" data-ru="Знакомство">Тааныштыруу</a>
+      <a href="programma.html" data-kg="Программа" data-ru="Программа">Программа</a>
+      <a href="resources.html" data-kg="Пайдалуу сайттар" data-ru="Полезные сайты">Пайдалуу сайттар</a>
+      <a href="shpargalka.html" class="active" data-kg="Шпаргалка" data-ru="Шпаргалка">Шпаргалка</a>
+      <a href="tests.html" data-kg="Тесттер" data-ru="Тесты">Тесттер</a>
+      <a href="career.html" data-kg="Кариера" data-ru="Карьера">Кариера</a>
+    </nav>
+    <div class="nav-right">
+      <div class="lang-toggle">
+        <button data-lang="kg" class="active">KG</button>
+        <button data-lang="ru">RU</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="hero" style="padding:52px 0;">
+  <div class="container">
+    <span class="eyebrow" data-kg="ТЕЗ-ШИЛТЕМЕ" data-ru="БЫСТРАЯ СПРАВКА">ТЕЗ-ШИЛТЕМЕ</span>
+    <h1 data-kg="Шпаргалка" data-ru="Шпаргалка">Шпаргалка</h1>
+    <p data-kg="Сабактарда колдонулган эң негизги HTML тегдер, CSS касиеттери, JavaScript синтаксиси жана Git буйруктары — бир баракта, тез издеп табуу үчүн." data-ru="Самые основные HTML-теги, CSS-свойства, синтаксис JavaScript и команды Git, используемые на занятиях — на одной странице для быстрого поиска.">Сабактарда колдонулган эң негизги HTML тегдер, CSS касиеттери, JavaScript синтаксиси жана Git буйруктары — бир баракта.</p>
+  </div>
+</section>
+
+<section class="tight">
+<div class="container">
+
+  <div class="res-cat">
+    <h3>📘 <span data-kg="HTML: негизги тегдер" data-ru="HTML: основные теги">HTML: негизги тегдер</span></h3>
+    <table class="cmd-table">
+      <tr><th data-kg="Тег" data-ru="Тег">Тег</th><th data-kg="Эмне үчүн" data-ru="Для чего">Эмне үчүн</th></tr>
+      <tr><td><code>&lt;div&gt;</code></td><td data-kg="Жалпы контейнер, блок деңгээлинде (structure үчүн)" data-ru="Общий контейнер, блочный уровень (для структуры)">Жалпы контейнер, блок деңгээлинде</td></tr>
+      <tr><td><code>&lt;span&gt;</code></td><td data-kg="Жалпы контейнер, текст ичинде (inline)" data-ru="Общий контейнер внутри текста (inline)">Жалпы контейнер, текст ичинде (inline)</td></tr>
+      <tr><td><code>&lt;p&gt;</code></td><td data-kg="Абзац (параграф)" data-ru="Абзац (параграф)">Абзац (параграф)</td></tr>
+      <tr><td><code>&lt;h1&gt;…&lt;h6&gt;</code></td><td data-kg="Аталыштар, h1 эң чоңу" data-ru="Заголовки, h1 самый крупный">Аталыштар, h1 эң чоңу</td></tr>
+      <tr><td><code>&lt;a href=""&gt;</code></td><td data-kg="Шилтеме (link)" data-ru="Ссылка (link)">Шилтеме (link)</td></tr>
+      <tr><td><code>&lt;img src="" alt=""&gt;</code></td><td data-kg="Сүрөт; alt — сүрөт жүктөлбөсө көрүнүүчү текст" data-ru="Картинка; alt — текст, если картинка не загрузится">Сүрөт; <code>alt</code> — жүктөлбөсө көрүнүүчү текст</td></tr>
+      <tr><td><code>&lt;ul&gt;/&lt;ol&gt;/&lt;li&gt;</code></td><td data-kg="Тартипсиз/тартиптүү тизме жана анын элементи" data-ru="Неупорядоченный/упорядоченный список и его элемент">Тартипсиз/тартиптүү тизме жана элементи</td></tr>
+      <tr><td><code>&lt;button&gt;</code></td><td data-kg="Баскыч" data-ru="Кнопка">Баскыч</td></tr>
+      <tr><td><code>&lt;input&gt;</code></td><td data-kg="Форма талаасы (текст, сан, чекбокс ж.б.)" data-ru="Поле формы (текст, число, чекбокс и т.д.)">Форма талаасы (текст, сан, чекбокс ж.б.)</td></tr>
+      <tr><td><code>&lt;form&gt;</code></td><td data-kg="Форма — бир нече input'ту бириктирет" data-ru="Форма — объединяет несколько input">Форма — бир нече input'ту бириктирет</td></tr>
+      <tr><td><code>&lt;table&gt;/&lt;tr&gt;/&lt;td&gt;/&lt;th&gt;</code></td><td data-kg="Таблица, сап, клетка, баш клетка" data-ru="Таблица, строка, ячейка, заголовочная ячейка">Таблица, сап, клетка, баш клетка</td></tr>
+      <tr><td><code>&lt;script src=""&gt;</code></td><td data-kg="JS файлын HTML'ге кошуу" data-ru="Подключение JS-файла к HTML">JS файлын HTML'ге кошуу</td></tr>
+    </table>
+  </div>
+
+  <div class="res-cat">
+    <h3>🎨 <span data-kg="CSS: негизги касиеттер" data-ru="CSS: основные свойства">CSS: негизги касиеттер</span></h3>
+    <table class="cmd-table">
+      <tr><th data-kg="Касиет" data-ru="Свойство">Касиет</th><th data-kg="Эмне үчүн" data-ru="Для чего">Эмне үчүн</th></tr>
+      <tr><td><code>color</code></td><td data-kg="Тексттин түсү" data-ru="Цвет текста">Тексттин түсү</td></tr>
+      <tr><td><code>background-color</code></td><td data-kg="Фондун түсү" data-ru="Цвет фона">Фондун түсү</td></tr>
+      <tr><td><code>margin</code></td><td data-kg="Элементтин сыртындагы боштук" data-ru="Отступ снаружи элемента">Элементтин сыртындагы боштук</td></tr>
+      <tr><td><code>padding</code></td><td data-kg="Элементтин ичиндеги боштук" data-ru="Отступ внутри элемента">Элементтин ичиндеги боштук</td></tr>
+      <tr><td><code>border</code> / <code>border-radius</code></td><td data-kg="Рамка / рамканын бурчун тегеректөө" data-ru="Рамка / скругление углов рамки">Рамка / бурчун тегеректөө</td></tr>
+      <tr><td><code>display: flex</code></td><td data-kg="Балдарды бир сапка/багытка тизүү" data-ru="Выстроить детей в строку/направление">Балдарды бир сапка/багытка тизүү</td></tr>
+      <tr><td><code>justify-content</code> / <code>align-items</code></td><td data-kg="Flex/grid ичинде горизонталдык/вертикалдык жайгаштыруу" data-ru="Позиционирование по горизонтали/вертикали во flex/grid">Гориз./вертик. жайгаштыруу (flex)</td></tr>
+      <tr><td><code>display: grid</code> / <code>grid-template-columns</code></td><td data-kg="Тор (grid) макет жана анын мамычалары" data-ru="Сеточная (grid) раскладка и её колонки">Тор (grid) макет жана мамычалары</td></tr>
+      <tr><td><code>gap</code></td><td data-kg="Flex/grid элементтеринин арасындагы боштук" data-ru="Промежуток между элементами flex/grid">Элементтердин арасындагы боштук</td></tr>
+      <tr><td><code>width</code> / <code>height</code></td><td data-kg="Туурасы / бийиктиги" data-ru="Ширина / высота">Туурасы / бийиктиги</td></tr>
+      <tr><td><code>font-size</code> / <code>font-weight</code></td><td data-kg="Тамганын өлчөмү / калыңдыгы" data-ru="Размер шрифта / насыщенность">Тамганын өлчөмү / калыңдыгы</td></tr>
+      <tr><td><code>text-align</code></td><td data-kg="Тексттин горизонталдык жайгашуусу" data-ru="Горизонтальное выравнивание текста">Тексттин горизонталдык жайгашуусу</td></tr>
+      <tr><td><code>position</code> (<code>relative</code>/<code>absolute</code>/<code>fixed</code>)</td><td data-kg="Элементти кантип жайгаштыруу ыкмасы" data-ru="Способ позиционирования элемента">Элементти жайгаштыруу ыкмасы</td></tr>
+      <tr><td><code>transition</code></td><td data-kg="Касиет өзгөргөндө жумшак анимация" data-ru="Плавная анимация при изменении свойства">Касиет өзгөргөндө жумшак анимация</td></tr>
+      <tr><td><code>box-shadow</code></td><td data-kg="Көлөкө" data-ru="Тень">Көлөкө</td></tr>
+      <tr><td><code>cursor: pointer</code></td><td data-kg="Курсорду баскыч сымал көрсөтүү" data-ru="Показать курсор как у кнопки">Курсорду баскыч сымал көрсөтүү</td></tr>
+    </table>
+  </div>
+
+  <div class="res-cat">
+    <h3>⚡ <span data-kg="JavaScript: негизги синтаксис" data-ru="JavaScript: основной синтаксис">JavaScript: негизги синтаксис</span></h3>
+    <table class="cmd-table">
+      <tr><th data-kg="Код" data-ru="Код">Код</th><th data-kg="Эмне кылат" data-ru="Что делает">Эмне кылат</th></tr>
+      <tr><td><code>let</code> / <code>const</code></td><td data-kg="Өзгөрө турган / өзгөрбөй турган айнымалы жарыялоо" data-ru="Объявить изменяемую / неизменяемую переменную">Өзгөрө турган / өзгөрбөй турган айнымалы</td></tr>
+      <tr><td><code>function name() {}</code> / <code>() =&gt; {}</code></td><td data-kg="Функция жарыялоо / arrow-функция" data-ru="Объявление функции / стрелочная функция">Функция / arrow-функция</td></tr>
+      <tr><td><code>if / else</code></td><td data-kg="Шарт менен код бутактоо" data-ru="Ветвление кода по условию">Шарт менен код бутактоо</td></tr>
+      <tr><td><code>for</code> / <code>while</code></td><td data-kg="Цикл — кодду бир нече жолу кайталоо" data-ru="Цикл — повторение кода несколько раз">Цикл — кодду кайталоо</td></tr>
+      <tr><td><code>array.map()</code></td><td data-kg="Ар бир элементти өзгөртүп, ЖАҢЫ массив кайтарат" data-ru="Изменяет каждый элемент и возвращает НОВЫЙ массив">Ар бир элементти өзгөртүп, жаңы массив кайтарат</td></tr>
+      <tr><td><code>array.filter()</code></td><td data-kg="Шартка ылайык элементтерди тандап алат" data-ru="Отбирает элементы по условию">Шартка ылайык элементтерди тандайт</td></tr>
+      <tr><td><code>array.forEach()</code></td><td data-kg="Ар бир элемент үчүн код аткарат (жаңы массив кайтарбайт)" data-ru="Выполняет код для каждого элемента (не возвращает новый массив)">Ар бир элемент үчүн код аткарат</td></tr>
+      <tr><td><code>array.find()</code></td><td data-kg="Шартка туура келген БИРИНЧИ элементти табат" data-ru="Находит ПЕРВЫЙ подходящий элемент">Шартка туура келген биринчи элементти табат</td></tr>
+      <tr><td><code>console.log()</code></td><td data-kg="Консолго маалымат чыгаруу" data-ru="Вывести данные в консоль">Консолго маалымат чыгаруу</td></tr>
+      <tr><td><code>document.querySelector()</code></td><td data-kg="CSS-селектор боюнча биринчи элементти табуу" data-ru="Найти первый элемент по CSS-селектору">CSS-селектор боюнча элемент табуу</td></tr>
+      <tr><td><code>element.addEventListener()</code></td><td data-kg="Элементке окуя (click ж.б.) кошуу" data-ru="Добавить событие (click и т.д.) элементу">Элементке окуя (click ж.б.) кошуу</td></tr>
+      <tr><td><code>localStorage.setItem() / getItem()</code></td><td data-kg="Браузерде маалымат сактоо / окуп алуу" data-ru="Сохранить / прочитать данные в браузере">Браузерде маалымат сактоо / окуу</td></tr>
+      <tr><td><code>JSON.stringify() / parse()</code></td><td data-kg="Объектти текстке айландыруу / текстти объектке кайтаруу" data-ru="Объект в текст / текст обратно в объект">Объект ⇄ текст айландыруу</td></tr>
+      <tr><td><code>`Салам, ${name}!`</code></td><td data-kg="Template literal — айнымалыны түз тексттин ичине коюу" data-ru="Шаблонная строка — переменная прямо внутри текста">Template literal — айнымалыны тексттин ичине коюу</td></tr>
+      <tr><td><code>{ ...obj, key: value }</code></td><td data-kg="Spread — объекттин/массивдин көчүрмөсүн жаңылап түзүү" data-ru="Spread — создать копию объекта/массива с изменением">Spread — көчүрмөнү жаңылап түзүү</td></tr>
+    </table>
+  </div>
+
+  <div class="res-cat">
+    <h3>🔧 <span data-kg="Git: негизги буйруктар" data-ru="Git: основные команды">Git: негизги буйруктар</span></h3>
+    <table class="cmd-table">
+      <tr><th data-kg="Буйрук" data-ru="Команда">Буйрук</th><th data-kg="Эмне кылат" data-ru="Что делает">Эмне кылат</th></tr>
+      <tr><td><code>git init</code></td><td data-kg="Жаңы Git репозиторийин баштоо" data-ru="Инициализировать новый Git-репозиторий">Жаңы Git репозиторийин баштоо</td></tr>
+      <tr><td><code>git clone [шилтеме]</code></td><td data-kg="GitHub'догу репозиторийди компьютерге көчүрүп алуу" data-ru="Скачать репозиторий с GitHub на компьютер">Репозиторийди компьютерге көчүрүп алуу</td></tr>
+      <tr><td><code>git status</code></td><td data-kg="Кайсы файлдар өзгөргөнүн көрсөтөт" data-ru="Показывает, какие файлы изменились">Кайсы файлдар өзгөргөнүн көрсөтөт</td></tr>
+      <tr><td><code>git add .</code></td><td data-kg="Бардык өзгөрүүлөрдү коммитке даярдоо (staging)" data-ru="Подготовить все изменения к коммиту (staging)">Өзгөрүүлөрдү коммитке даярдоо</td></tr>
+      <tr><td><code>git commit -m "..."</code></td><td data-kg="Даярдалган өзгөрүүлөрдү сактап, тарыхка жазуу" data-ru="Сохранить подготовленные изменения в историю">Өзгөрүүлөрдү тарыхка жазуу</td></tr>
+      <tr><td><code>git push</code></td><td data-kg="Коммиттерди GitHub'го жөнөтүү" data-ru="Отправить коммиты на GitHub">Коммиттерди GitHub'го жөнөтүү</td></tr>
+      <tr><td><code>git pull</code></td><td data-kg="GitHub'догу жаңы өзгөрүүлөрдү компьютерге түшүрүү" data-ru="Скачать новые изменения с GitHub на компьютер">Жаңы өзгөрүүлөрдү түшүрүү</td></tr>
+      <tr><td><code>git branch [ат]</code></td><td data-kg="Жаңы branch түзүү" data-ru="Создать новую ветку (branch)">Жаңы branch түзүү</td></tr>
+      <tr><td><code>git checkout -b [ат]</code></td><td data-kg="Жаңы branch түзүп, ошол замат ага өтүү" data-ru="Создать новую ветку и сразу переключиться на неё">Жаңы branch түзүп, ага өтүү</td></tr>
+      <tr><td><code>git merge [branch]</code></td><td data-kg="Башка branch'ты учурдагы branch'ка бириктирүү" data-ru="Слить другую ветку с текущей">Башка branch'ты бириктирүү</td></tr>
+      <tr><td><code>git log</code></td><td data-kg="Коммиттердин тарыхын көрсөтөт" data-ru="Показывает историю коммитов">Коммиттердин тарыхын көрсөтөт</td></tr>
+      <tr><td><code>git stash</code></td><td data-kg="Даяр эмес өзгөрүүлөрдү убактылуу сактап коюу" data-ru="Временно отложить незавершённые изменения">Даяр эмес өзгөрүүлөрдү убактылуу сактоо</td></tr>
+    </table>
+  </div>
+
+</div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="foot-top">
+      <div class="brand"><span class="dot"></span><span data-kg="Кодбилим" data-ru="Кодбилим">Кодбилим</span></div>
+      <nav>
+        <a href="index.html" data-kg="Тааныштыруу" data-ru="Знакомство">Тааныштыруу</a>
+        <a href="programma.html" data-kg="Программа" data-ru="Программа">Программа</a>
+        <a href="resources.html" data-kg="Пайдалуу сайттар" data-ru="Полезные сайты">Пайдалуу сайттар</a>
+        <a href="career.html" data-kg="Кариера" data-ru="Карьера">Кариера</a>
+      </nav>
+    </div>
+    <p class="fine" data-kg="© 2026 Кодбилим. Бардык укуктар корголгон." data-ru="© 2026 Кодбилим. Все права защищены.">© 2026 Кодбилим.</p>
+  </div>
+</footer>
+
+<script src="js/script.js"></script>
+</body>
+</html>
