@@ -694,3 +694,42 @@ footer.site-footer .fine { padding-top: 20px; font-size: 0.82rem; color: rgba(25
   .lesson.project { margin: 0 -16px; padding: 12px 16px; }
 }
 
+
+/* ===== Auth & progress ===== */
+.btn-block { width: 100%; justify-content: center; }
+.btn-ghost { background: transparent; color: rgba(255,255,255,0.8); border-color: rgba(255,255,255,0.2); }
+.btn-ghost:hover { color: #fff; border-color: rgba(255,255,255,0.5); }
+.btn:disabled { opacity: 0.6; cursor: default; transform: none; }
+.btn-done { background: var(--accent-soft); color: #127a67; border-color: var(--accent); }
+
+.auth-wrap { display: flex; justify-content: center; }
+.auth-card { width: 100%; max-width: 420px; padding: 32px; }
+.auth-card h1 { font-size: 1.6rem; margin-bottom: 6px; }
+.auth-lead { color: var(--text-soft); margin-bottom: 22px; }
+.auth-divider { display: flex; align-items: center; gap: 12px; color: var(--text-soft); font-size: 0.85rem; margin: 18px 0; }
+.auth-divider::before, .auth-divider::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+.auth-form { display: flex; flex-direction: column; gap: 14px; }
+.auth-form label { display: flex; flex-direction: column; gap: 6px; font-weight: 600; font-size: 0.88rem; }
+.auth-form input {
+  font: inherit; font-weight: 400; padding: 10px 12px;
+  border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface);
+}
+.auth-form input:focus { outline: 2px solid var(--primary); outline-offset: 1px; border-color: transparent; }
+.form-error { color: #c0392b; background: #fdecea; border-radius: var(--radius-sm); padding: 8px 12px; font-size: 0.88rem; margin: 0; }
+.link-button { background: none; border: 0; padding: 0; margin-top: 18px; color: var(--primary); font: inherit; font-weight: 600; cursor: pointer; }
+.link-button:hover { text-decoration: underline; }
+
+.lesson-done { display: flex; justify-content: center; margin: 28px 0 8px; }
+.done-hint { font-weight: 600; }
+
+.lesson.done .num { background: var(--accent); color: #fff; }
+
+.progress { height: 10px; border-radius: 999px; background: var(--surface-alt); overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: inherit; transition: width .3s; }
+.progress-label { margin: 10px 0 0; color: var(--text-soft); font-size: 0.9rem; }
+.month-progress { margin-bottom: 16px; }
+.month-progress-head { display: flex; justify-content: space-between; gap: 12px; font-size: 0.9rem; margin-bottom: 6px; }
+
+@media (max-width: 860px) {
+  .nav-right .btn-sm { padding: 5px 10px; }
+}

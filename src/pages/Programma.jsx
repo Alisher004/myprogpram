@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
 import { useI18n } from "../i18n/I18nContext";
 import { groupByMonthAndWeek } from "../data/lessons";
+import { useProgress } from "../auth/useProgress";
 
 const MONTHS = groupByMonthAndWeek();
 
 export default function Programma() {
   const { t, pick } = useI18n();
+  const { isDone } = useProgress();
 
   return (
     <>
@@ -36,10 +38,10 @@ export default function Programma() {
                     {lessons.map((lesson) => (
                       <Link
                         key={lesson.id}
-                        className={`lesson${lesson.project ? " project" : ""}`}
+                        className={`lesson${lesson.project ? " project" : ""}${isDone(lesson.id) ? " done" : ""}`}
                         to={`/lesson/${lesson.id}`}
                       >
-                        <span className="num">{lesson.id}</span>
+                        <span className="num">{isDone(lesson.id) ? "✓" : lesson.id}</span>
                         <div className="body">
                           <div className="txt">{pick(lesson, "title")}</div>
                         </div>

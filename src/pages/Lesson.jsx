@@ -3,6 +3,8 @@ import { Link, useParams } from "react-router-dom";
 import { useI18n } from "../i18n/I18nContext";
 import { getLesson } from "../data/lessons";
 import Playground from "../components/Playground";
+import { useAuth } from "../auth/AuthContext";
+import { useProgress } from "../auth/useProgress";
 
 function hasPlayground(pg) {
   return pg && (pg.html || pg.css || pg.js);
@@ -31,6 +33,32 @@ function Video({ url }) {
         </p>
       )}
     </div>
+  );
+}
+
+function DoneButton({ lessonId }) {
+  const { t } = useI18n();
+  const { enabled, user } = useAuth();
+  const { ready, isDone, toggle } = useProgress();
+  if (!enabled) return null;
+  if (!user) {
+    return (
+      <Link className="done-hint" to="/login" state={{ from: `/lesson/${lessonId}` }}>
+        {t("progress.loginToTrack")}
+      </Link>
+    );
+  }
+  if (!ready) return null;
+  const done = isDone(lessonId);
+  return (
+    <button
+      type="button"
+      className={`btn ${done ? "btn-done" : "btn-primary"}`}
+      aria-pressed={done}
+      onClick={() => toggle(lessonId)}
+    >
+      {t(done ? "progress.done" : "progress.markDone")}
+    </button>
   );
 }
 
@@ -119,6 +147,10 @@ export default function Lesson() {
             </div>
           </div>
         )}
+
+        <div className="lesson-done">
+          <DoneButton lessonId={lesson.id} />
+        </div>
 
         <div className="lesson-nav">
           <NavCard lesson={getLesson(id - 1)} dir="prev" />

@@ -230,5 +230,48 @@
         "project": "Долбоор: Firebase'ке туташкан React апп + Vercel'ге deploy + резюме"
       }
     }
+  },
+  "auth": {
+    "login": "Кирүү",
+    "logout": "Чыгуу",
+    "dashboard": "Кабинет",
+    "loginTitle": "Кодбилимге кирүү",
+    "signupTitle": "Катталуу",
+    "loginLead": "Прогрессиңизди сактоо жана тапшырмаларды тапшыруу үчүн кириңиз.",
+    "google": "Google менен кирүү",
+    "or": "же",
+    "name": "Атыңыз",
+    "email": "Email",
+    "password": "Сырсөз",
+    "submitLogin": "Кирүү",
+    "submitSignup": "Катталуу",
+    "toSignup": "Аккаунтуңуз жокпу? Катталыңыз",
+    "toLogin": "Аккаунтуңуз барбы? Кириңиз",
+    "disabled": "Кирүү азырынча жеткиликсиз: Firebase туташтырыла элек.",
+    "errors": {
+      "auth/invalid-credential": "Email же сырсөз туура эмес.",
+      "auth/email-already-in-use": "Бул email менен аккаунт мурунтан бар.",
+      "auth/weak-password": "Сырсөз кеминде 6 белгиден турушу керек.",
+      "auth/invalid-email": "Email туура эмес жазылган.",
+      "auth/popup-closed-by-user": "Кирүү терезеси жабылды.",
+      "auth/too-many-requests": "Өтө көп аракет болду. Бир аздан кийин кайталаңыз.",
+      "default": "Ката кетти. Кайра аракет кылыңыз."
+    }
+  },
+  "progress": {
+    "markDone": "Өттүм ✓",
+    "done": "✓ Өтүлдү",
+    "loginToTrack": "Прогрессти сактоо үчүн кириңиз →"
+  },
+  "dashboard": {
+    "hello": "Салам, {name}!",
+    "lead": "Окуу прогрессиңиз ушул жерде.",
+    "overall": "Жалпы прогресс",
+    "lessonsDone": "{done} / {total} сабак өтүлдү",
+    "next": "Кийинки сабак",
+    "continue": "Улантуу →",
+    "allDone": "Куттуктайбыз! Бардык сабактар өтүлдү 🎉",
+    "byMonth": "Айлар боюнча",
+    "toProgram": "Толук программа →"
   }
 }

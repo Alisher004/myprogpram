@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useI18n } from "../i18n/I18nContext";
+import { useAuth } from "../auth/AuthContext";
 
 const NAV = [
   { to: "/", key: "home" },
@@ -15,6 +16,29 @@ function Brand() {
     <>
       <span className="dot"></span>
       <span>{t("common.brand")}</span>
+    </>
+  );
+}
+
+function AuthControls() {
+  const { t } = useI18n();
+  const { enabled, user, loading, logout } = useAuth();
+  if (!enabled || loading) return null;
+  if (!user) {
+    return (
+      <Link to="/login" className="btn btn-primary btn-sm">
+        {t("auth.login")}
+      </Link>
+    );
+  }
+  return (
+    <>
+      <Link to="/dashboard" className="btn btn-primary btn-sm">
+        {t("auth.dashboard")}
+      </Link>
+      <button type="button" className="btn btn-ghost btn-sm" onClick={logout}>
+        {t("auth.logout")}
+      </button>
     </>
   );
 }
@@ -52,6 +76,7 @@ function Header() {
           ))}
         </nav>
         <div className="nav-right">
+          <AuthControls />
           <div className="lang-toggle">
             {["kg", "ru"].map((code) => (
               <button key={code} className={lang === code ? "active" : undefined} onClick={() => setLang(code)}>

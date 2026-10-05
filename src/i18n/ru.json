@@ -230,5 +230,48 @@
         "project": "Проект: React-приложение с Firebase + деплой на Vercel + резюме"
       }
     }
+  },
+  "auth": {
+    "login": "Войти",
+    "logout": "Выйти",
+    "dashboard": "Кабинет",
+    "loginTitle": "Вход в Кодбилим",
+    "signupTitle": "Регистрация",
+    "loginLead": "Войдите, чтобы сохранять прогресс и сдавать задания.",
+    "google": "Войти через Google",
+    "or": "или",
+    "name": "Ваше имя",
+    "email": "Email",
+    "password": "Пароль",
+    "submitLogin": "Войти",
+    "submitSignup": "Зарегистрироваться",
+    "toSignup": "Нет аккаунта? Зарегистрируйтесь",
+    "toLogin": "Уже есть аккаунт? Войдите",
+    "disabled": "Вход пока недоступен: Firebase ещё не подключён.",
+    "errors": {
+      "auth/invalid-credential": "Неверный email или пароль.",
+      "auth/email-already-in-use": "Аккаунт с этим email уже существует.",
+      "auth/weak-password": "Пароль должен содержать минимум 6 символов.",
+      "auth/invalid-email": "Некорректный email.",
+      "auth/popup-closed-by-user": "Окно входа было закрыто.",
+      "auth/too-many-requests": "Слишком много попыток. Повторите позже.",
+      "default": "Произошла ошибка. Попробуйте ещё раз."
+    }
+  },
+  "progress": {
+    "markDone": "Пройдено ✓",
+    "done": "✓ Пройдено",
+    "loginToTrack": "Войдите, чтобы сохранять прогресс →"
+  },
+  "dashboard": {
+    "hello": "Привет, {name}!",
+    "lead": "Здесь ваш прогресс обучения.",
+    "overall": "Общий прогресс",
+    "lessonsDone": "Пройдено {done} из {total} занятий",
+    "next": "Следующее занятие",
+    "continue": "Продолжить →",
+    "allDone": "Поздравляем! Все занятия пройдены 🎉",
+    "byMonth": "По месяцам",
+    "toProgram": "Полная программа →"
   }
 }
