@@ -1,8 +1,11 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import { useProgress } from "../auth/useProgress";
 import { useI18n } from "../i18n/I18nContext";
-import { LESSONS, groupByMonthAndWeek } from "../data/lessons";
+import { LESSONS, getLesson, groupByMonthAndWeek } from "../data/lessons";
+import { watchMySubmissions } from "../data/submissions";
+import { StatusBadge } from "../components/HomeworkSubmit";
 
 const MONTHS = Object.entries(groupByMonthAndWeek()).map(([month, weeks]) => [month, Object.values(weeks).flat()]);
 
@@ -11,6 +14,35 @@ function ProgressBar({ value, total }) {
   return (
     <div className="progress" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
       <div className="progress-fill" style={{ width: `${pct}%` }} />
+    </div>
+  );
+}
+
+function MySubmissions({ uid }) {
+  const { t, pick } = useI18n();
+  const [items, setItems] = useState(null);
+  useEffect(() => watchMySubmissions(uid, setItems), [uid]);
+  if (!items) return null;
+  return (
+    <div className="lesson-block">
+      <h3>{t("homework.mine")}</h3>
+      {items.length === 0 ? (
+        <p className="muted">{t("homework.none")}</p>
+      ) : (
+        <ul className="my-submissions">
+          {items.map((s) => (
+            <li key={s.id}>
+              <Link to={`/lesson/${s.lessonId}`}>
+                {t("lesson.lessonLabel", { n: s.lessonId })}: {pick(getLesson(s.lessonId), "title")}
+              </Link>
+              <span className="my-submissions-meta">
+                {s.grade != null && <strong>{s.grade}/5</strong>}
+                <StatusBadge status={s.status} />
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
@@ -54,6 +86,8 @@ export default function Dashboard() {
                 <p>{t("dashboard.allDone")}</p>
               )}
             </div>
+
+            <MySubmissions uid={user.uid} />
 
             <div className="lesson-block">
               <h3>{t("dashboard.byMonth")}</h3>

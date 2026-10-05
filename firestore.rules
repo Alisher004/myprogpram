@@ -20,5 +20,49 @@ service cloud.firestore {
       allow read: if isSelf(uid) || isStaff();
       allow write: if isSelf(uid);
     }
+
+    // submissions/{uid}_{lessonId}: one homework submission per student per lesson.
+    // Students write the link; teachers write the review. Neither can touch the other's fields.
+    match /submissions/{id} {
+      function validLink(d) {
+        return d.url is string && d.url.size() <= 500 && d.url.matches("https://.+")
+          && d.note is string && d.note.size() <= 1000;
+      }
+      function studentFields() {
+        return ["uid", "studentName", "studentEmail", "lessonId", "url", "note", "status", "submittedAt"];
+      }
+      function reviewFields() {
+        return ["status", "grade", "feedback", "reviewedAt", "reviewedBy", "reviewerName"];
+      }
+
+      // get by id works even before the doc exists (resource == null); list needs a uid filter
+      allow get: if (signedIn() && id.matches(request.auth.uid + "_[0-9]+")) || isStaff();
+      allow list: if (signedIn() && resource.data.uid == request.auth.uid) || isStaff();
+
+      allow create: if signedIn()
+        && id == request.auth.uid + "_" + string(request.resource.data.lessonId)
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.status == "pending"
+        && request.resource.data.keys().hasOnly(studentFields())
+        && request.resource.data.submittedAt == request.time
+        && validLink(request.resource.data);
+
+      // Resubmitting replaces the doc, which drops the old review and resets status to pending
+      allow update: if signedIn()
+        && resource.data.uid == request.auth.uid
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.lessonId == resource.data.lessonId
+        && request.resource.data.status == "pending"
+        && request.resource.data.keys().hasOnly(studentFields())
+        && request.resource.data.submittedAt == request.time
+        && validLink(request.resource.data);
+
+      allow update: if isStaff()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(reviewFields())
+        && request.resource.data.status in ["accepted", "needs_work"]
+        && request.resource.data.grade is int && request.resource.data.grade >= 1 && request.resource.data.grade <= 5
+        && request.resource.data.feedback is string && request.resource.data.feedback.size() <= 2000
+        && request.resource.data.reviewedBy == request.auth.uid;
+    }
   }
 }

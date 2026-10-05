@@ -5,13 +5,14 @@ import Home from "./pages/Home";
 import Resources from "./pages/Resources";
 import Career from "./pages/Career";
 import Login from "./pages/Login";
-import RequireAuth from "./auth/RequireAuth";
+import RequireAuth, { STAFF_ROLES } from "./auth/RequireAuth";
 import { useI18n } from "./i18n/I18nContext";
 
 // Both pages pull in the 60-lesson data file — load it only when needed
 const Programma = lazy(() => import("./pages/Programma"));
 const Lesson = lazy(() => import("./pages/Lesson"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Teacher = lazy(() => import("./pages/Teacher"));
 
 // Old static URLs (lesson.html?id=5) keep working after the migration
 function LegacyLessonRedirect() {
@@ -47,6 +48,16 @@ export default function App() {
             <RequireAuth>
               <Suspense>
                 <Dashboard />
+              </Suspense>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="teacher"
+          element={
+            <RequireAuth roles={STAFF_ROLES}>
+              <Suspense>
+                <Teacher />
               </Suspense>
             </RequireAuth>
           }

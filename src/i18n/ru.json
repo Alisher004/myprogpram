@@ -273,5 +273,58 @@
     "allDone": "Поздравляем! Все занятия пройдены 🎉",
     "byMonth": "По месяцам",
     "toProgram": "Полная программа →"
+  },
+  "homework": {
+    "submitTitle": "Сдать задание",
+    "linkLabel": "Ссылка (GitHub, GitHub Pages, Vercel или Netlify)",
+    "linkPlaceholder": "https://github.com/username/project",
+    "noteLabel": "Комментарий преподавателю (необязательно)",
+    "submit": "Сдать",
+    "resubmit": "Сдать повторно",
+    "saving": "Отправка…",
+    "badLink": "Укажите ссылку на github.com, github.io, vercel.app или netlify.app с https://.",
+    "loginToSubmit": "Войдите, чтобы сдать задание →",
+    "status": {
+      "pending": "⏳ На проверке",
+      "accepted": "✅ Принято",
+      "needs_work": "🔁 Нужно доработать"
+    },
+    "grade": "Оценка",
+    "feedback": "Комментарий преподавателя",
+    "yourLink": "Ваша ссылка",
+    "edit": "Изменить ссылку",
+    "cancel": "Отмена",
+    "error": "Не отправлено. Попробуйте ещё раз.",
+    "mine": "Мои задания",
+    "none": "Вы пока не сдали ни одного задания."
+  },
+  "teacher": {
+    "nav": "Преподаватель",
+    "title": "Панель преподавателя",
+    "lead": "Проверяйте задания студентов и следите за их прогрессом.",
+    "tabs": {
+      "pending": "Ждут проверки",
+      "recent": "Последние задания",
+      "students": "Студенты"
+    },
+    "empty": "Нет заданий на проверку 🎉",
+    "student": "Студент",
+    "lesson": "Занятие",
+    "submitted": "Сдано",
+    "open": "Открыть ↗",
+    "note": "Комментарий студента",
+    "grade": "Оценка (1–5)",
+    "feedback": "Комментарий",
+    "feedbackPlaceholder": "Что хорошо, что нужно исправить…",
+    "accept": "Принять",
+    "needsWork": "На доработку",
+    "reviewedBy": "Проверил(а): {name}",
+    "forbidden": "Эта страница только для преподавателей.",
+    "progress": "Прогресс",
+    "submissions": "Задания",
+    "role": "Роль",
+    "joined": "Регистрация",
+    "gradeRequired": "Поставьте оценку (1–5).",
+    "noStudents": "Студентов пока нет."
   }
 }

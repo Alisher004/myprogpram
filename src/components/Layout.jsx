@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useI18n } from "../i18n/I18nContext";
 import { useAuth } from "../auth/AuthContext";
+import { STAFF_ROLES } from "../auth/RequireAuth";
 
 const NAV = [
   { to: "/", key: "home" },
@@ -22,7 +23,7 @@ function Brand() {
 
 function AuthControls() {
   const { t } = useI18n();
-  const { enabled, user, loading, logout } = useAuth();
+  const { enabled, user, profile, loading, logout } = useAuth();
   if (!enabled || loading) return null;
   if (!user) {
     return (
@@ -33,6 +34,11 @@ function AuthControls() {
   }
   return (
     <>
+      {STAFF_ROLES.includes(profile?.role) && (
+        <Link to="/teacher" className="btn btn-ghost btn-sm">
+          {t("teacher.nav")}
+        </Link>
+      )}
       <Link to="/dashboard" className="btn btn-primary btn-sm">
         {t("auth.dashboard")}
       </Link>

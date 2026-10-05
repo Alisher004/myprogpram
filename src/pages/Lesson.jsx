@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { useI18n } from "../i18n/I18nContext";
 import { getLesson } from "../data/lessons";
 import Playground from "../components/Playground";
+import HomeworkSubmit from "../components/HomeworkSubmit";
 import { useAuth } from "../auth/AuthContext";
 import { useProgress } from "../auth/useProgress";
 
@@ -130,6 +131,7 @@ export default function Lesson() {
         <div className="lesson-block homework">
           <h3>{t("lesson.homework")}</h3>
           <p>{pick(lesson, "homework")}</p>
+          <HomeworkSubmit lessonId={lesson.id} />
         </div>
 
         {guideHtml && (
