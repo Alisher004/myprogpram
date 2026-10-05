@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useI18n } from "../i18n/I18nContext";
 import { getLesson } from "../data/lessons";
@@ -40,6 +40,7 @@ function DoneButton({ lessonId }) {
   const { t } = useI18n();
   const { enabled, user } = useAuth();
   const { ready, isDone, toggle } = useProgress();
+  const [saving, setSaving] = useState(false);
   if (!enabled) return null;
   if (!user) {
     return (
@@ -55,7 +56,15 @@ function DoneButton({ lessonId }) {
       type="button"
       className={`btn ${done ? "btn-done" : "btn-primary"}`}
       aria-pressed={done}
-      onClick={() => toggle(lessonId)}
+      disabled={saving}
+      onClick={async () => {
+        setSaving(true);
+        try {
+          await toggle(lessonId);
+        } finally {
+          setSaving(false);
+        }
+      }}
     >
       {t(done ? "progress.done" : "progress.markDone")}
     </button>

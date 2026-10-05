@@ -19,12 +19,13 @@ export function useProgress() {
     });
   }, [user]);
 
-  const isDone = useCallback((lessonId) => Boolean(completed[lessonId]), [completed]);
+  // Check key presence, not truthiness: a pending serverTimestamp() reads as null locally
+  const isDone = useCallback((lessonId) => lessonId in completed, [completed]);
 
   const toggle = useCallback(
     (lessonId) => {
       if (!user) return;
-      const done = Boolean(completed[lessonId]);
+      const done = lessonId in completed;
       return setDoc(
         doc(db, "progress", user.uid),
         {
