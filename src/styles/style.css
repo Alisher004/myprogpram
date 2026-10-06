@@ -777,3 +777,69 @@ footer.site-footer .fine { padding-top: 20px; font-size: 0.82rem; color: rgba(25
 
 .table-wrap { overflow-x: auto; }
 .students-table td { vertical-align: top; }
+
+/* ===== Staff workspace (teacher / admin) ===== */
+.staff { --staff-accent: #14b8a6; --staff-accent-soft: #ccfbf1; --staff-ink: #0f766e; display: flex; min-height: 100vh; background: #eef1f6; }
+.staff-admin { --staff-accent: #f59e0b; --staff-accent-soft: #fef3c7; --staff-ink: #92400e; }
+
+.staff-sidebar {
+  width: 248px; flex: none; position: sticky; top: 0; height: 100vh;
+  display: flex; flex-direction: column; gap: 8px; padding: 22px 16px;
+  background: #0b1120; color: rgba(255,255,255,0.8); border-right: 3px solid var(--staff-accent);
+}
+.staff-brand { display: flex; align-items: center; gap: 10px; color: #fff; font-weight: 800; font-size: 1.1rem; padding: 0 8px 18px; }
+.staff-brand:hover { text-decoration: none; }
+.staff-brand .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--staff-accent); box-shadow: 0 0 0 4px rgba(255,255,255,0.08); }
+.staff-brand small { display: block; font-size: 0.7rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--staff-accent); }
+.staff-nav { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+.staff-nav-title { margin: 16px 8px 6px; font-size: 0.7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+.staff-link { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 9px 12px; border-radius: var(--radius-sm); color: rgba(255,255,255,0.78); font-weight: 600; font-size: 0.92rem; }
+.staff-link:hover { background: rgba(255,255,255,0.06); color: #fff; text-decoration: none; }
+.staff-link.active { background: var(--staff-accent); color: #0b1120; }
+.staff-badge { min-width: 22px; padding: 1px 7px; border-radius: 999px; background: #ef4444; color: #fff; font-size: 0.75rem; font-weight: 800; text-align: center; }
+.staff-back { padding: 9px 12px; color: rgba(255,255,255,0.55); font-size: 0.88rem; font-weight: 600; }
+.staff-back:hover { color: #fff; text-decoration: none; }
+
+.staff-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.staff-topbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 28px; background: #fff; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 5; }
+.staff-user { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.staff-user-name { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.staff-topbar-actions { display: flex; align-items: center; gap: 10px; }
+.staff-topbar .lang-toggle { background: #eef1f6; }
+.staff-topbar .lang-toggle button { color: var(--text-soft); }
+.staff-content { padding: 28px; max-width: 1100px; width: 100%; }
+.staff-head { margin-bottom: 20px; }
+.staff-head h1 { font-size: 1.6rem; margin: 0 0 4px; }
+
+.role-chip { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 0.72rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; }
+.role-chip.role-teacher, .role-select.role-teacher { background: #ccfbf1; color: #0f766e; }
+.role-chip.role-admin, .role-select.role-admin { background: #fef3c7; color: #92400e; }
+.role-chip.role-student, .role-select.role-student { background: #e0e7ff; color: #3730a3; }
+
+.btn-staff { border: 0; color: #0b1120; }
+.btn-staff.role-teacher { background: #14b8a6; }
+.btn-staff.role-admin { background: #f59e0b; }
+.btn-staff:hover { filter: brightness(1.08); text-decoration: none; }
+
+.staff-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-bottom: 18px; }
+.staff-stat { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 14px 16px; background: #fff; border: 1px solid var(--border); border-radius: var(--radius); font: inherit; cursor: pointer; text-align: left; }
+.staff-stat strong { font-size: 1.5rem; line-height: 1.1; }
+.staff-stat span { color: var(--text-soft); font-size: 0.85rem; font-weight: 600; }
+.staff-stat.active { border-color: var(--staff-accent); box-shadow: 0 0 0 3px var(--staff-accent-soft); }
+.staff-search { width: 100%; max-width: 420px; font: inherit; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 16px; background: #fff; }
+.role-select { font: inherit; font-weight: 700; font-size: 0.85rem; padding: 6px 10px; border-radius: var(--radius-sm); border: 0; cursor: pointer; }
+.role-select:disabled { cursor: not-allowed; opacity: 0.7; }
+.staff .grade-picker button.active { background: var(--staff-ink); border-color: var(--staff-ink); }
+.staff .tabs button.active { color: var(--staff-ink); border-bottom-color: var(--staff-accent); }
+
+@media (max-width: 860px) {
+  .staff { flex-direction: column; }
+  .staff-sidebar { width: auto; height: auto; position: static; flex-direction: row; align-items: center; flex-wrap: wrap; padding: 12px 16px; border-right: 0; border-bottom: 3px solid var(--staff-accent); }
+  .staff-brand { padding: 0 8px 0 0; }
+  .staff-nav { flex: 0 0 100%; flex-direction: row; flex-wrap: nowrap; overflow-x: auto; order: 3; }
+  .staff-nav-title { display: none; }
+  .staff-link { white-space: nowrap; }
+  .staff-back { margin-left: auto; }
+  .staff-topbar { padding: 10px 16px; position: static; }
+  .staff-content { padding: 20px 16px; }
+}

@@ -1,22 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../lib/firebase";
-import { useAuth } from "../auth/AuthContext";
-import { useI18n } from "../i18n/I18nContext";
-import { LESSONS, getLesson } from "../data/lessons";
-import { reviewSubmission, watchPendingSubmissions, watchRecentSubmissions } from "../data/submissions";
-import { StatusBadge } from "../components/HomeworkSubmit";
-
-function formatDate(ts, lang) {
-  if (!ts?.toDate) return "—";
-  return ts.toDate().toLocaleString(lang === "ru" ? "ru-RU" : "ky-KG", {
-    day: "numeric",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
+import { useAuth } from "../../auth/AuthContext";
+import { useI18n } from "../../i18n/I18nContext";
+import { getLesson } from "../../data/lessons";
+import { reviewSubmission, watchPendingSubmissions, watchRecentSubmissions } from "../../data/submissions";
+import { StatusBadge } from "../../components/HomeworkSubmit";
+import { formatDate } from "./format";
 
 function ReviewForm({ submission }) {
   const { t } = useI18n();
@@ -140,95 +129,16 @@ function SubmissionList({ watch }) {
   );
 }
 
-function Students() {
-  const { t, lang } = useI18n();
-  const [data, setData] = useState(null);
-
-  useEffect(() => {
-    Promise.all([
-      getDocs(collection(db, "users")),
-      getDocs(collection(db, "progress")),
-      getDocs(collection(db, "submissions")),
-    ]).then(([users, progress, submissions]) => {
-      const done = Object.fromEntries(progress.docs.map((d) => [d.id, Object.keys(d.data().completed ?? {}).length]));
-      const subs = {};
-      for (const d of submissions.docs) subs[d.data().uid] = (subs[d.data().uid] ?? 0) + 1;
-      setData(
-        users.docs
-          .map((d) => ({ id: d.id, ...d.data(), done: done[d.id] ?? 0, subs: subs[d.id] ?? 0 }))
-          .sort((a, b) => b.done - a.done)
-      );
-    });
-  }, []);
-
-  if (!data) return null;
-  if (!data.length) return <p className="muted">{t("teacher.noStudents")}</p>;
-  return (
-    <div className="table-wrap">
-      <table className="cmd-table students-table">
-        <thead>
-          <tr>
-            <th>{t("teacher.student")}</th>
-            <th>{t("teacher.role")}</th>
-            <th>{t("teacher.progress")}</th>
-            <th>{t("teacher.submissions")}</th>
-            <th>{t("teacher.joined")}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((u) => (
-            <tr key={u.id}>
-              <td>
-                <strong>{u.name}</strong>
-                <br />
-                <span className="muted">{u.email}</span>
-              </td>
-              <td>{u.role}</td>
-              <td>
-                {u.done}/{LESSONS.length}
-              </td>
-              <td>{u.subs}</td>
-              <td>{formatDate(u.createdAt, lang)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
-const TABS = ["pending", "recent", "students"];
-
-export default function Teacher() {
+// mode: "pending" (review queue) | "recent" (everything, newest first)
+export default function Submissions({ mode }) {
   const { t } = useI18n();
-  const [tab, setTab] = useState("pending");
-  const watchers = useMemo(() => ({ pending: watchPendingSubmissions, recent: watchRecentSubmissions }), []);
-
+  const watch = mode === "pending" ? watchPendingSubmissions : watchRecentSubmissions;
   return (
-    <section className="tight">
-      <div className="container">
-        <div className="section-head" style={{ marginBottom: "24px" }}>
-          <h1>{t("teacher.title")}</h1>
-          <p>{t("teacher.lead")}</p>
-        </div>
-
-        <div className="tabs" role="tablist">
-          {TABS.map((key) => (
-            <button
-              key={key}
-              type="button"
-              role="tab"
-              aria-selected={tab === key}
-              className={tab === key ? "active" : undefined}
-              onClick={() => setTab(key)}
-            >
-              {t(`teacher.tabs.${key}`)}
-            </button>
-          ))}
-        </div>
-
-        {tab === "students" ? <Students /> : <SubmissionList key={tab} watch={watchers[tab]} />}
+    <>
+      <div className="staff-head">
+        <h1>{t(`teacher.tabs.${mode}`)}</h1>
       </div>
-    </section>
+      <SubmissionList key={mode} watch={watch} />
+    </>
   );
 }

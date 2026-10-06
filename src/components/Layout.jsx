@@ -35,8 +35,8 @@ function AuthControls() {
   return (
     <>
       {STAFF_ROLES.includes(profile?.role) && (
-        <Link to="/teacher" className="btn btn-ghost btn-sm">
-          {t("teacher.nav")}
+        <Link to="/teacher" className={`btn btn-sm btn-staff role-${profile.role}`}>
+          {t("staff.panel")} · {t(`roles.${profile.role}`)}
         </Link>
       )}
       <Link to="/dashboard" className="btn btn-primary btn-sm">
