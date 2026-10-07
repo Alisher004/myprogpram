@@ -41,9 +41,11 @@ export function watchMySubmission(uid, lessonId, cb) {
   );
 }
 
-export function watchMySubmissions(uid, cb) {
-  return onSnapshot(query(submissionsRef(), where("uid", "==", uid)), (snap) =>
-    cb(snap.docs.map(withId).sort((a, b) => a.lessonId - b.lessonId))
+export function watchMySubmissions(uid, cb, onError) {
+  return onSnapshot(
+    query(submissionsRef(), where("uid", "==", uid)),
+    (snap) => cb(snap.docs.map(withId).sort((a, b) => a.lessonId - b.lessonId)),
+    onError
   );
 }
 
@@ -61,16 +63,20 @@ export function submitHomework({ user, profile, lessonId, url, note }) {
   });
 }
 
-export function watchPendingSubmissions(cb) {
+export function watchPendingSubmissions(cb, onError) {
   // Single-field filter + client-side sort avoids needing a composite index
-  return onSnapshot(query(submissionsRef(), where("status", "==", "pending")), (snap) =>
-    cb(snap.docs.map(withId).sort((a, b) => (a.submittedAt?.seconds ?? 0) - (b.submittedAt?.seconds ?? 0)))
+  return onSnapshot(
+    query(submissionsRef(), where("status", "==", "pending")),
+    (snap) => cb(snap.docs.map(withId).sort((a, b) => (a.submittedAt?.seconds ?? 0) - (b.submittedAt?.seconds ?? 0))),
+    onError
   );
 }
 
-export function watchRecentSubmissions(cb, max = 100) {
-  return onSnapshot(query(submissionsRef(), orderBy("submittedAt", "desc"), limit(max)), (snap) =>
-    cb(snap.docs.map(withId))
+export function watchRecentSubmissions(cb, onError, max = 100) {
+  return onSnapshot(
+    query(submissionsRef(), orderBy("submittedAt", "desc"), limit(max)),
+    (snap) => cb(snap.docs.map(withId)),
+    onError
   );
 }
 

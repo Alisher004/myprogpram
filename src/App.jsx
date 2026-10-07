@@ -4,23 +4,42 @@ import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Resources from "./pages/Resources";
 import Career from "./pages/Career";
-import Login from "./pages/Login";
-import RequireAuth, { STAFF_ROLES } from "./auth/RequireAuth";
+import LoginPage from "./pages/auth/LoginPage";
+import RequireRole, { PageLoader } from "./auth/RequireRole";
 import { useI18n } from "./i18n/I18nContext";
+import { ROUTES } from "./lib/routes";
 
-// Both pages pull in the 60-lesson data file — load it only when needed
+// Pages that pull in the 60-lesson data file or Firestore queries load on demand
 const Programma = lazy(() => import("./pages/Programma"));
 const Lesson = lazy(() => import("./pages/Lesson"));
-const Dashboard = lazy(() => import("./pages/Dashboard"));
-const StaffLayout = lazy(() => import("./pages/staff/StaffLayout"));
-const Submissions = lazy(() => import("./pages/staff/Submissions"));
-const Students = lazy(() => import("./pages/staff/Students"));
-const AdminUsers = lazy(() => import("./pages/staff/AdminUsers"));
+
+const StudentArea = lazy(() => import("./pages/student/StudentArea"));
+const StudentOverview = lazy(() => import("./pages/student/Overview"));
+const StudentLessons = lazy(() => import("./pages/student/Lessons"));
+const StudentLesson = lazy(() => import("./pages/student/LessonView"));
+const StudentHomework = lazy(() => import("./pages/student/Homework"));
+const StudentProfile = lazy(() => import("./pages/student/Profile"));
+
+const TeacherArea = lazy(() => import("./pages/teacher/TeacherArea"));
+const TeacherOverview = lazy(() => import("./pages/teacher/Overview"));
+const Submissions = lazy(() => import("./pages/teacher/Submissions"));
+const Students = lazy(() => import("./pages/teacher/Students"));
+
+const AdminArea = lazy(() => import("./pages/admin/AdminArea"));
+const AdminOverview = lazy(() => import("./pages/admin/Overview"));
+const AdminUsers = lazy(() => import("./pages/admin/Users"));
+
+const lazyPage = (el) => <Suspense fallback={<PageLoader />}>{el}</Suspense>;
+
+// Each area: role guard → its own shell → its pages
+const area = (role, Shell) => (
+  <RequireRole role={role}>{lazyPage(<Shell />)}</RequireRole>
+);
 
 // Old static URLs (lesson.html?id=5) keep working after the migration
 function LegacyLessonRedirect() {
   const [params] = useSearchParams();
-  return <Navigate to={`/lesson/${params.get("id") || 1}`} replace />;
+  return <Navigate to={ROUTES.lesson(params.get("id") || 1)} replace />;
 }
 
 function NotFound() {
@@ -29,7 +48,7 @@ function NotFound() {
     <section>
       <div className="container">
         <p>{t("common.notFound")}</p>
-        <Link to="/">{t("common.backHome")}</Link>
+        <Link to={ROUTES.home}>{t("common.backHome")}</Link>
       </div>
     </section>
   );
@@ -38,59 +57,48 @@ function NotFound() {
 export default function App() {
   return (
     <Routes>
+      {/* Public site */}
       <Route element={<Layout />}>
         <Route index element={<Home />} />
-        <Route path="programma" element={<Suspense><Programma /></Suspense>} />
-        <Route path="lesson/:id" element={<Suspense><Lesson /></Suspense>} />
-        <Route path="resources" element={<Resources />} />
-        <Route path="career" element={<Career />} />
-        <Route path="login" element={<Login />} />
-        <Route
-          path="dashboard"
-          element={
-            <RequireAuth>
-              <Suspense>
-                <Dashboard />
-              </Suspense>
-            </RequireAuth>
-          }
-        />
+        <Route path={ROUTES.program} element={lazyPage(<Programma />)} />
+        <Route path="/lesson/:id" element={lazyPage(<Lesson />)} />
+        <Route path={ROUTES.resources} element={<Resources />} />
+        <Route path={ROUTES.career} element={<Career />} />
+        <Route path={ROUTES.login} element={<LoginPage portal="student" />} />
+        <Route path={ROUTES.register} element={<LoginPage portal="student" initialMode="signup" />} />
 
-        <Route path="index.html" element={<Navigate to="/" replace />} />
-        <Route path="programma.html" element={<Navigate to="/programma" replace />} />
-        <Route path="resources.html" element={<Navigate to="/resources" replace />} />
-        <Route path="career.html" element={<Navigate to="/career" replace />} />
-        <Route path="lesson.html" element={<LegacyLessonRedirect />} />
-
+        <Route path="/dashboard" element={<Navigate to={ROUTES.student.home} replace />} />
+        <Route path="/index.html" element={<Navigate to="/" replace />} />
+        <Route path="/programma.html" element={<Navigate to={ROUTES.program} replace />} />
+        <Route path="/resources.html" element={<Navigate to={ROUTES.resources} replace />} />
+        <Route path="/career.html" element={<Navigate to={ROUTES.career} replace />} />
+        <Route path="/lesson.html" element={<LegacyLessonRedirect />} />
         <Route path="*" element={<NotFound />} />
       </Route>
 
-      {/* Staff workspace: own layout, no public header/footer */}
-      <Route
-        path="teacher"
-        element={
-          <RequireAuth roles={STAFF_ROLES}>
-            <Suspense>
-              <StaffLayout />
-            </Suspense>
-          </RequireAuth>
-        }
-      >
-        <Route index element={<Submissions mode="pending" />} />
+      {/* Student cabinet */}
+      <Route path={ROUTES.student.base} element={area("student", StudentArea)}>
+        <Route index element={<StudentOverview />} />
+        <Route path="lessons" element={<StudentLessons />} />
+        <Route path="lessons/:id" element={<StudentLesson />} />
+        <Route path="homework" element={<StudentHomework />} />
+        <Route path="profile" element={<StudentProfile />} />
+      </Route>
+
+      {/* Staff portals: login pages sit outside the guarded area */}
+      <Route path={ROUTES.teacher.login} element={<LoginPage portal="teacher" />} />
+      <Route path={ROUTES.teacher.base} element={area("teacher", TeacherArea)}>
+        <Route index element={<TeacherOverview />} />
+        <Route path="queue" element={<Submissions mode="pending" />} />
         <Route path="submissions" element={<Submissions mode="recent" />} />
         <Route path="students" element={<Students />} />
       </Route>
-      <Route
-        path="admin"
-        element={
-          <RequireAuth roles={["admin"]}>
-            <Suspense>
-              <StaffLayout />
-            </Suspense>
-          </RequireAuth>
-        }
-      >
-        <Route index element={<AdminUsers />} />
+
+      <Route path={ROUTES.admin.login} element={<LoginPage portal="admin" />} />
+      <Route path={ROUTES.admin.base} element={area("admin", AdminArea)}>
+        <Route index element={<AdminOverview />} />
+        <Route path="users" element={<AdminUsers />} />
+        <Route path="submissions" element={<Submissions mode="recent" readOnly />} />
       </Route>
     </Routes>
   );

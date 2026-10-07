@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import { useI18n } from "../i18n/I18nContext";
 import { isAllowedLink, submitHomework, watchMySubmission } from "../data/submissions";
+import { useAsyncAction } from "../hooks/useAsyncAction";
+import { ROUTES } from "../lib/routes";
 
 export function StatusBadge({ status }) {
   const { t } = useI18n();
@@ -11,30 +13,39 @@ export function StatusBadge({ status }) {
 
 export default function HomeworkSubmit({ lessonId }) {
   const { t } = useI18n();
-  const { enabled, user, profile } = useAuth();
+  const { enabled, user, profile, role } = useAuth();
   const [submission, setSubmission] = useState(undefined); // undefined = loading
   const [editing, setEditing] = useState(false);
   const [url, setUrl] = useState("");
   const [note, setNote] = useState("");
   const [error, setError] = useState("");
-  const [saving, setSaving] = useState(false);
+  const { run: save, pending: saving } = useAsyncAction(async () => {
+    try {
+      await submitHomework({ user, profile, lessonId, url, note });
+      setEditing(false);
+    } catch (err) {
+      console.error(err);
+      setError(t("homework.error"));
+    }
+  });
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || role !== "student") return;
     setSubmission(undefined);
     setEditing(false);
     return watchMySubmission(user.uid, lessonId, setSubmission);
-  }, [user, lessonId]);
+  }, [user, role, lessonId]);
 
   if (!enabled) return null;
   if (!user) {
     return (
-      <Link className="done-hint" to="/login" state={{ from: `/lesson/${lessonId}` }}>
+      <Link className="done-hint" to={ROUTES.login} state={{ from: ROUTES.student.lesson(lessonId) }}>
         {t("homework.loginToSubmit")}
       </Link>
     );
   }
-  if (submission === undefined) return null;
+  // Only students submit homework; staff viewing a lesson see the task text alone
+  if (role !== "student" || submission === undefined) return null;
 
   const startEdit = () => {
     setUrl(submission?.url ?? "");
@@ -43,20 +54,11 @@ export default function HomeworkSubmit({ lessonId }) {
     setEditing(true);
   };
 
-  const onSubmit = async (e) => {
+  const onSubmit = (e) => {
     e.preventDefault();
     if (!isAllowedLink(url.trim())) return setError(t("homework.badLink"));
     setError("");
-    setSaving(true);
-    try {
-      await submitHomework({ user, profile, lessonId, url, note });
-      setEditing(false);
-    } catch (err) {
-      console.error(err);
-      setError(t("homework.error"));
-    } finally {
-      setSaving(false);
-    }
+    save();
   };
 
   // Keep the form (disabled, "Жөнөтүлүүдө…") until the server confirms the write —

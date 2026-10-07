@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useI18n } from "../i18n/I18nContext";
 import { getLesson } from "../data/lessons";
@@ -6,6 +6,8 @@ import Playground from "../components/Playground";
 import HomeworkSubmit from "../components/HomeworkSubmit";
 import { useAuth } from "../auth/AuthContext";
 import { useProgress } from "../auth/useProgress";
+import { useAsyncAction } from "../hooks/useAsyncAction";
+import { ROUTES } from "../lib/routes";
 
 function hasPlayground(pg) {
   return pg && (pg.html || pg.css || pg.js);
@@ -39,79 +41,73 @@ function Video({ url }) {
 
 function DoneButton({ lessonId }) {
   const { t } = useI18n();
-  const { enabled, user } = useAuth();
+  const { enabled, user, role } = useAuth();
   const { ready, isDone, toggle } = useProgress();
-  const [saving, setSaving] = useState(false);
+  const { run, pending } = useAsyncAction(() => toggle(lessonId));
   if (!enabled) return null;
   if (!user) {
     return (
-      <Link className="done-hint" to="/login" state={{ from: `/lesson/${lessonId}` }}>
+      <Link className="done-hint" to={ROUTES.login} state={{ from: ROUTES.student.lesson(lessonId) }}>
         {t("progress.loginToTrack")}
       </Link>
     );
   }
-  if (!ready) return null;
+  // Progress belongs to students only; staff browsing a lesson see the content alone
+  if (role !== "student" || !ready) return null;
   const done = isDone(lessonId);
   return (
     <button
       type="button"
       className={`btn ${done ? "btn-done" : "btn-primary"}`}
       aria-pressed={done}
-      disabled={saving}
-      onClick={async () => {
-        setSaving(true);
-        try {
-          await toggle(lessonId);
-        } finally {
-          setSaving(false);
-        }
-      }}
+      disabled={pending}
+      aria-busy={pending}
+      onClick={run}
     >
       {t(done ? "progress.done" : "progress.markDone")}
     </button>
   );
 }
 
-function NavCard({ lesson, dir, className }) {
+function NavCard({ lesson, dir, className, href }) {
   const { t, pick } = useI18n();
   if (!lesson) return <div className="lesson-nav-empty" />;
   return (
-    <Link className={className} to={`/lesson/${lesson.id}`}>
+    <Link className={className} to={href(lesson.id)}>
       <span className="dir">{t(`lesson.${dir}`)}</span>
       <span className="ttl">{pick(lesson, "title")}</span>
     </Link>
   );
 }
 
-export default function Lesson() {
+// Rendered on the public site (/lesson/:id) and inside the student cabinet;
+// lessonHref/backHref keep navigation within whichever area it was opened from.
+export default function Lesson({ lessonHref = ROUTES.lesson, backHref = ROUTES.program, inShell = false }) {
   const { t, pick, lang } = useI18n();
   const id = Number.parseInt(useParams().id, 10);
   const lesson = getLesson(id);
   const title = lesson && pick(lesson, "title");
 
   useEffect(() => {
-    document.title = lesson ? `Lesson ${lesson.id} — ${title} — Кодбилим` : "Кодбилим";
+    document.title = lesson ? `${lesson.id}. ${title} — КодБилим` : "КодБилим";
   }, [lesson, title]);
 
   if (!lesson) {
     return (
-      <section className="tight">
-        <div className="container" style={{ maxWidth: "840px" }}>
-          <p>
-            {t("lesson.notFound")} <Link to="/programma">{t("lesson.back")}</Link>
-          </p>
-        </div>
-      </section>
+      <Frame inShell={inShell}>
+        <p>
+          {t("lesson.notFound")} <Link to={backHref}>{t(inShell ? "lesson.backToLessons" : "lesson.back")}</Link>
+        </p>
+      </Frame>
     );
   }
 
   const guideHtml = lesson[`guide_${lang}_html`] ?? lesson.guide_kg_html;
 
   return (
-    <section className="tight">
-      <div className="container" style={{ maxWidth: "840px" }}>
-        <Link to="/programma" style={{ display: "inline-block", marginBottom: "18px", fontWeight: 600 }}>
-          {t("lesson.back")}
+    <Frame inShell={inShell}>
+        <Link to={backHref} className="back-link">
+          {t(inShell ? "lesson.backToLessons" : "lesson.back")}
         </Link>
 
         <div className="lesson-detail-head">
@@ -164,10 +160,18 @@ export default function Lesson() {
         </div>
 
         <div className="lesson-nav">
-          <NavCard lesson={getLesson(id - 1)} dir="prev" />
-          <NavCard lesson={getLesson(id + 1)} dir="next" className="next" />
+          <NavCard lesson={getLesson(id - 1)} dir="prev" href={lessonHref} />
+          <NavCard lesson={getLesson(id + 1)} dir="next" className="next" href={lessonHref} />
         </div>
-      </div>
+    </Frame>
+  );
+}
+
+function Frame({ inShell, children }) {
+  if (inShell) return <div className="lesson-page">{children}</div>;
+  return (
+    <section className="tight">
+      <div className="container lesson-page">{children}</div>
     </section>
   );
 }

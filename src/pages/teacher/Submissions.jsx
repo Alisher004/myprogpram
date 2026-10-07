@@ -2,10 +2,14 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
 import { useI18n } from "../../i18n/I18nContext";
+import { useAsyncAction } from "../../hooks/useAsyncAction";
 import { getLesson } from "../../data/lessons";
 import { reviewSubmission, watchPendingSubmissions, watchRecentSubmissions } from "../../data/submissions";
 import { StatusBadge } from "../../components/HomeworkSubmit";
-import { formatDate } from "./format";
+import { ShellHead } from "../../components/AppShell";
+import { Empty, LoadError, Loading } from "../../components/AsyncState";
+import { formatDate } from "../../lib/format";
+import { ROUTES } from "../../lib/routes";
 
 function ReviewForm({ submission }) {
   const { t } = useI18n();
@@ -13,12 +17,11 @@ function ReviewForm({ submission }) {
   const [grade, setGrade] = useState(submission.grade ?? 0);
   const [feedback, setFeedback] = useState(submission.feedback ?? "");
   const [error, setError] = useState("");
-  const [saving, setSaving] = useState(false);
 
-  const save = async (status) => {
+  // Both buttons share one guard: "accept" then "needs work" in quick succession can't both fire
+  const { run: save, pending } = useAsyncAction(async (status) => {
     if (!grade) return setError(t("teacher.gradeRequired"));
     setError("");
-    setSaving(true);
     try {
       await reviewSubmission({
         id: submission.id,
@@ -31,10 +34,8 @@ function ReviewForm({ submission }) {
     } catch (err) {
       console.error(err);
       setError(t("homework.error"));
-    } finally {
-      setSaving(false);
     }
-  };
+  });
 
   return (
     <div className="review-form">
@@ -54,6 +55,7 @@ function ReviewForm({ submission }) {
         ))}
       </div>
       <textarea
+        id={`feedback-${submission.id}`}
         rows={3}
         maxLength={2000}
         placeholder={t("teacher.feedbackPlaceholder")}
@@ -61,12 +63,16 @@ function ReviewForm({ submission }) {
         value={feedback}
         onChange={(e) => setFeedback(e.target.value)}
       />
-      {error && <p className="form-error">{error}</p>}
+      {error && (
+        <p className="form-error" role="alert">
+          {error}
+        </p>
+      )}
       <div className="hw-actions">
-        <button type="button" className="btn btn-primary btn-sm" disabled={saving} onClick={() => save("accepted")}>
+        <button type="button" className="btn btn-primary btn-sm" disabled={pending} onClick={() => save("accepted")}>
           {t("teacher.accept")}
         </button>
-        <button type="button" className="btn btn-outline btn-sm" disabled={saving} onClick={() => save("needs_work")}>
+        <button type="button" className="btn btn-outline btn-sm" disabled={pending} onClick={() => save("needs_work")}>
           {t("teacher.needsWork")}
         </button>
       </div>
@@ -74,11 +80,11 @@ function ReviewForm({ submission }) {
   );
 }
 
-function SubmissionCard({ submission }) {
+function SubmissionCard({ submission, readOnly }) {
   const { t, pick, lang } = useI18n();
   const lesson = getLesson(submission.lessonId);
   return (
-    <div className="card submission-card">
+    <article className="card submission-card">
       <div className="submission-head">
         <div>
           <strong>{submission.studentName}</strong>
@@ -87,7 +93,7 @@ function SubmissionCard({ submission }) {
         <StatusBadge status={submission.status} />
       </div>
       <p className="submission-lesson">
-        <Link to={`/lesson/${submission.lessonId}`}>
+        <Link to={ROUTES.lesson(submission.lessonId)} target="_blank">
           {t("lesson.lessonLabel", { n: submission.lessonId })}
           {lesson && `: ${pick(lesson, "title")}`}
         </Link>
@@ -106,39 +112,48 @@ function SubmissionCard({ submission }) {
           <strong>{t("teacher.note")}:</strong> {submission.note}
         </p>
       )}
-      {submission.reviewerName && (
-        <p className="muted">{t("teacher.reviewedBy", { name: submission.reviewerName })}</p>
+      {readOnly && submission.grade != null && (
+        <p className="submission-note">
+          <strong>{t("homework.grade")}: {submission.grade}/5</strong>
+          {submission.feedback && ` · ${submission.feedback}`}
+        </p>
       )}
-      <ReviewForm key={`${submission.id}-${submission.submittedAt?.seconds}`} submission={submission} />
-    </div>
-  );
-}
-
-function SubmissionList({ watch }) {
-  const { t } = useI18n();
-  const [items, setItems] = useState(null);
-  useEffect(() => watch(setItems), [watch]);
-  if (!items) return null;
-  if (!items.length) return <p className="muted">{t("teacher.empty")}</p>;
-  return (
-    <div className="submission-list">
-      {items.map((s) => (
-        <SubmissionCard key={s.id} submission={s} />
-      ))}
-    </div>
+      {submission.reviewerName && <p className="muted">{t("teacher.reviewedBy", { name: submission.reviewerName })}</p>}
+      {!readOnly && <ReviewForm key={`${submission.id}-${submission.submittedAt?.seconds}`} submission={submission} />}
+    </article>
   );
 }
 
 // mode: "pending" (review queue) | "recent" (everything, newest first)
-export default function Submissions({ mode }) {
+// readOnly: admins monitor submissions; grading is the teacher's job
+export default function Submissions({ mode, readOnly = false }) {
   const { t } = useI18n();
-  const watch = mode === "pending" ? watchPendingSubmissions : watchRecentSubmissions;
+  const [items, setItems] = useState(null);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    setItems(null);
+    setFailed(false);
+    const watch = mode === "pending" ? watchPendingSubmissions : watchRecentSubmissions;
+    return watch(setItems, () => setFailed(true));
+  }, [mode]);
+
   return (
     <>
-      <div className="staff-head">
-        <h1>{t(`teacher.tabs.${mode}`)}</h1>
-      </div>
-      <SubmissionList key={mode} watch={watch} />
+      <ShellHead title={t(`teacher.tabs.${mode}`)} lead={t(`teacher.lead.${mode}`)} />
+      {failed ? (
+        <LoadError />
+      ) : !items ? (
+        <Loading />
+      ) : items.length === 0 ? (
+        <Empty title={t(mode === "pending" ? "teacher.empty" : "teacher.emptyAll")} />
+      ) : (
+        <div className="submission-list">
+          {items.map((s) => (
+            <SubmissionCard key={s.id} submission={s} readOnly={readOnly} />
+          ))}
+        </div>
+      )}
     </>
   );
 }

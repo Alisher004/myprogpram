@@ -3,37 +3,36 @@ import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "../../lib/firebase";
 import { useAuth } from "../../auth/AuthContext";
 import { useI18n } from "../../i18n/I18nContext";
-import { formatDate } from "./format";
-
-const ROLES = ["student", "teacher", "admin"];
+import { useAsyncAction } from "../../hooks/useAsyncAction";
+import { ShellHead } from "../../components/AppShell";
+import { Empty, LoadError, Loading } from "../../components/AsyncState";
+import { formatDate } from "../../lib/format";
+import { ROLES } from "../../lib/routes";
 
 function RoleSelect({ user, isSelf }) {
   const { t } = useI18n();
-  const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  const change = async (role) => {
+  const { run: change, pending } = useAsyncAction(async (role) => {
     if (role === user.role) return;
     if (!confirm(t("admin.confirmRole", { name: user.name, role: t(`roles.${role}`) }))) return;
-    setSaving(true);
     setError("");
     try {
       await updateDoc(doc(db, "users", user.id), { role });
     } catch (err) {
       console.error(err);
       setError(t("homework.error"));
-    } finally {
-      setSaving(false);
     }
-  };
+  });
 
   return (
     <>
       <select
+        id={`role-${user.id}`}
         className={`role-select role-${user.role}`}
         value={user.role}
-        // Admins can't demote themselves — it would lock everyone out of this page
-        disabled={saving || isSelf}
+        // Admins can't change their own role (also enforced by Firestore rules)
+        disabled={pending || isSelf}
         title={isSelf ? t("admin.selfLocked") : undefined}
         aria-label={t("teacher.role")}
         onChange={(e) => change(e.target.value)}
@@ -44,7 +43,11 @@ function RoleSelect({ user, isSelf }) {
           </option>
         ))}
       </select>
-      {error && <p className="form-error">{error}</p>}
+      {error && (
+        <p className="form-error" role="alert">
+          {error}
+        </p>
+      )}
     </>
   );
 }
@@ -53,13 +56,16 @@ export default function AdminUsers() {
   const { t, lang } = useI18n();
   const { user: me } = useAuth();
   const [users, setUsers] = useState(null);
+  const [failed, setFailed] = useState(false);
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
 
   useEffect(
     () =>
-      onSnapshot(collection(db, "users"), (snap) =>
-        setUsers(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+      onSnapshot(
+        collection(db, "users"),
+        (snap) => setUsers(snap.docs.map((d) => ({ id: d.id, ...d.data() }))),
+        () => setFailed(true)
       ),
     []
   );
@@ -80,39 +86,46 @@ export default function AdminUsers() {
 
   return (
     <>
-      <div className="staff-head">
-        <h1>{t("admin.usersTitle")}</h1>
-        <p className="muted">{t("admin.usersLead")}</p>
+      <ShellHead title={t("admin.usersTitle")} lead={t("admin.usersLead")} />
+
+      <div className="filter-bar">
+        <div className="segmented" role="tablist" aria-label={t("teacher.role")}>
+          {["all", ...ROLES].map((r) => (
+            <button
+              key={r}
+              type="button"
+              role="tab"
+              aria-selected={roleFilter === r}
+              className={roleFilter === r ? "active" : undefined}
+              onClick={() => setRoleFilter(r)}
+            >
+              {r === "all" ? t("admin.all") : t(`roles.${r}`)} <span className="segmented-count">{counts[r] ?? 0}</span>
+            </button>
+          ))}
+        </div>
+        <input
+          id="user-search"
+          type="search"
+          className="input search-input"
+          placeholder={t("admin.search")}
+          aria-label={t("admin.search")}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
       </div>
 
-      <div className="staff-stats">
-        {["all", ...ROLES].map((r) => (
-          <button
-            key={r}
-            type="button"
-            className={`staff-stat${roleFilter === r ? " active" : ""}`}
-            onClick={() => setRoleFilter(r)}
-          >
-            <strong>{counts[r] ?? 0}</strong>
-            <span>{r === "all" ? t("admin.all") : t(`roles.${r}`)}</span>
-          </button>
-        ))}
-      </div>
-
-      <input
-        type="search"
-        className="staff-search"
-        placeholder={t("admin.search")}
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
-
-      {users && (
-        <div className="table-wrap">
-          <table className="cmd-table students-table">
+      {failed ? (
+        <LoadError />
+      ) : !users ? (
+        <Loading />
+      ) : visible.length === 0 ? (
+        <Empty title={t("admin.noMatches")} />
+      ) : (
+        <div className="table-wrap card table-card">
+          <table className="cmd-table data-table">
             <thead>
               <tr>
-                <th>{t("teacher.student")}</th>
+                <th>{t("admin.user")}</th>
                 <th>{t("teacher.role")}</th>
                 <th>{t("teacher.joined")}</th>
               </tr>
