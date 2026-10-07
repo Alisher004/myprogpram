@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
 import { useI18n } from "../../i18n/I18nContext";
 import { getLesson } from "../../data/lessons";
 import { watchMySubmissions } from "../../data/submissions";
+import { useLiveQuery } from "../../hooks/useLiveQuery";
 import { StatusBadge } from "../../components/HomeworkSubmit";
 import { Empty, LoadError, Loading } from "../../components/AsyncState";
 import { ROUTES } from "../../lib/routes";
@@ -12,12 +12,9 @@ import { ROUTES } from "../../lib/routes";
 export default function MySubmissions({ limit }) {
   const { t, pick } = useI18n();
   const { user } = useAuth();
-  const [items, setItems] = useState(null);
-  const [failed, setFailed] = useState(false);
+  const { data: items, failed, retry } = useLiveQuery((next, fail) => watchMySubmissions(user.uid, next, fail), [user.uid]);
 
-  useEffect(() => watchMySubmissions(user.uid, setItems, () => setFailed(true)), [user.uid]);
-
-  if (failed) return <LoadError />;
+  if (failed) return <LoadError onRetry={retry} />;
   if (!items) return <Loading />;
   if (items.length === 0) {
     return (

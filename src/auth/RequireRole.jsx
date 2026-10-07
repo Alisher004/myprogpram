@@ -5,19 +5,35 @@ import { homeFor, loginFor } from "../lib/routes";
 import { useAsyncAction } from "../hooks/useAsyncAction";
 
 export function PageLoader() {
-  return <div className="page-loader" role="status" aria-busy="true" />;
+  const { t } = useI18n();
+  return (
+    <div className="page-loader" role="status" aria-busy="true">
+      <span className="visually-hidden">{t("common.loading")}</span>
+    </div>
+  );
 }
 
-function ProfileMissing() {
+// Signed in, but the profile can't be used: missing document, no permission,
+// network failure or timeout. Retry is offered only where it can help; sign-out
+// is always available so nobody is stuck.
+function ProfileProblem() {
   const { t } = useI18n();
-  const { logout } = useAuth();
-  const { run, pending } = useAsyncAction(logout);
+  const { logout, profileStatus, profileError, retryProfile } = useAuth();
+  const { run: signOut, pending } = useAsyncAction(logout);
+  const message = profileStatus === "missing" ? t("auth.errors.app/no-profile") : t(`auth.profile.${profileError.kind}`);
   return (
-    <div className="state-block">
-      <p className="form-error">{t("auth.errors.app/no-profile")}</p>
-      <button type="button" className="btn btn-outline" disabled={pending} onClick={run}>
-        {t("auth.logout")}
-      </button>
+    <div className="state-block" role="alert">
+      <p className="form-error">{message}</p>
+      <div className="hw-actions">
+        {profileError?.retryable && (
+          <button type="button" className="btn btn-primary" onClick={retryProfile}>
+            {t("common.retry")}
+          </button>
+        )}
+        <button type="button" className="btn btn-outline" disabled={pending} onClick={signOut}>
+          {t("auth.logout")}
+        </button>
+      </div>
     </div>
   );
 }
@@ -33,7 +49,7 @@ export default function RequireRole({ role, children }) {
   if (loading) return <PageLoader />;
   if (!user) return <Navigate to={loginFor(role)} replace state={{ from: location.pathname }} />;
   if (profileStatus === "loading") return <PageLoader />;
-  if (profileStatus === "missing") return <ProfileMissing />;
+  if (profileStatus === "missing" || profileStatus === "error") return <ProfileProblem />;
   if (profile.role !== role) return <Navigate to={homeFor(profile.role)} replace />;
   return children;
 }

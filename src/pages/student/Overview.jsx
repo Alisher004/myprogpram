@@ -5,7 +5,7 @@ import { useI18n } from "../../i18n/I18nContext";
 import { LESSONS, groupByMonthAndWeek } from "../../data/lessons";
 import { ShellHead } from "../../components/AppShell";
 import ProgressBar from "../../components/ProgressBar";
-import { Loading } from "../../components/AsyncState";
+import { LoadError, Loading } from "../../components/AsyncState";
 import { ROUTES } from "../../lib/routes";
 import MySubmissions from "./MySubmissions";
 
@@ -14,7 +14,7 @@ const MONTHS = Object.entries(groupByMonthAndWeek()).map(([month, weeks]) => [mo
 export default function StudentOverview() {
   const { t, pick } = useI18n();
   const { profile, user } = useAuth();
-  const { ready, isDone, count } = useProgress();
+  const { ready, failed, retry, isDone, count } = useProgress();
 
   const next = LESSONS.find((l) => !isDone(l.id));
 
@@ -22,7 +22,9 @@ export default function StudentOverview() {
     <>
       <ShellHead title={t("shell.hello", { name: profile.name || user.email })} lead={t("dashboard.lead")} />
 
-      {!ready ? (
+      {failed && !ready ? (
+        <LoadError onRetry={retry} />
+      ) : !ready ? (
         <Loading />
       ) : (
         <div className="overview-grid">

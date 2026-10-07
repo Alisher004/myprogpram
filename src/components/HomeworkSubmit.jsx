@@ -5,6 +5,7 @@ import { useI18n } from "../i18n/I18nContext";
 import { isAllowedLink, submitHomework, watchMySubmission } from "../data/submissions";
 import { useAsyncAction } from "../hooks/useAsyncAction";
 import { ROUTES } from "../lib/routes";
+import { LoadError } from "./AsyncState";
 
 export function StatusBadge({ status }) {
   const { t } = useI18n();
@@ -15,6 +16,8 @@ export default function HomeworkSubmit({ lessonId }) {
   const { t } = useI18n();
   const { enabled, user, profile, role } = useAuth();
   const [submission, setSubmission] = useState(undefined); // undefined = loading
+  const [failed, setFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
   const [editing, setEditing] = useState(false);
   const [url, setUrl] = useState("");
   const [note, setNote] = useState("");
@@ -32,9 +35,18 @@ export default function HomeworkSubmit({ lessonId }) {
   useEffect(() => {
     if (!user || role !== "student") return;
     setSubmission(undefined);
+    setFailed(false);
     setEditing(false);
-    return watchMySubmission(user.uid, lessonId, setSubmission);
-  }, [user, role, lessonId]);
+    return watchMySubmission(
+      user.uid,
+      lessonId,
+      (value) => {
+        setSubmission(value);
+        setFailed(false);
+      },
+      () => setFailed(true)
+    );
+  }, [user, role, lessonId, attempt]);
 
   if (!enabled) return null;
   if (!user) {
@@ -45,7 +57,9 @@ export default function HomeworkSubmit({ lessonId }) {
     );
   }
   // Only students submit homework; staff viewing a lesson see the task text alone
-  if (role !== "student" || submission === undefined) return null;
+  if (role !== "student") return null;
+  if (failed && submission === undefined) return <LoadError onRetry={() => setAttempt((a) => a + 1)} />;
+  if (submission === undefined) return null;
 
   const startEdit = () => {
     setUrl(submission?.url ?? "");

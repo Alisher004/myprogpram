@@ -5,6 +5,7 @@ import { useAuth } from "../auth/AuthContext";
 import { ROUTES, homeFor } from "../lib/routes";
 import Logo from "./Logo";
 import LanguageSelect from "./LanguageSelect";
+import ErrorBoundary from "./ErrorBoundary";
 
 // Public navigation only. The logo links home; account areas have their own sidebars.
 const NAV = [
@@ -119,7 +120,9 @@ export default function Layout() {
     <>
       <Header />
       <main>
-        <Outlet />
+        <ErrorBoundary resetKey={pathname} inline>
+          <Outlet />
+        </ErrorBoundary>
       </main>
       <Footer />
     </>

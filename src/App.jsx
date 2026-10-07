@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { Suspense } from "react";
 import { Link, Navigate, Route, Routes, useSearchParams } from "react-router-dom";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
@@ -8,26 +8,28 @@ import LoginPage from "./pages/auth/LoginPage";
 import RequireRole, { PageLoader } from "./auth/RequireRole";
 import { useI18n } from "./i18n/I18nContext";
 import { ROUTES } from "./lib/routes";
+import { lazyWithReload } from "./lib/chunkRecovery";
 
-// Pages that pull in the 60-lesson data file or Firestore queries load on demand
-const Programma = lazy(() => import("./pages/Programma"));
-const Lesson = lazy(() => import("./pages/Lesson"));
+// Pages that pull in the 60-lesson data file or Firestore queries load on demand.
+// lazyWithReload: a chunk missing after a deploy triggers one automatic reload.
+const Programma = lazyWithReload(() => import("./pages/Programma"));
+const Lesson = lazyWithReload(() => import("./pages/Lesson"));
 
-const StudentArea = lazy(() => import("./pages/student/StudentArea"));
-const StudentOverview = lazy(() => import("./pages/student/Overview"));
-const StudentLessons = lazy(() => import("./pages/student/Lessons"));
-const StudentLesson = lazy(() => import("./pages/student/LessonView"));
-const StudentHomework = lazy(() => import("./pages/student/Homework"));
-const StudentProfile = lazy(() => import("./pages/student/Profile"));
+const StudentArea = lazyWithReload(() => import("./pages/student/StudentArea"));
+const StudentOverview = lazyWithReload(() => import("./pages/student/Overview"));
+const StudentLessons = lazyWithReload(() => import("./pages/student/Lessons"));
+const StudentLesson = lazyWithReload(() => import("./pages/student/LessonView"));
+const StudentHomework = lazyWithReload(() => import("./pages/student/Homework"));
+const StudentProfile = lazyWithReload(() => import("./pages/student/Profile"));
 
-const TeacherArea = lazy(() => import("./pages/teacher/TeacherArea"));
-const TeacherOverview = lazy(() => import("./pages/teacher/Overview"));
-const Submissions = lazy(() => import("./pages/teacher/Submissions"));
-const Students = lazy(() => import("./pages/teacher/Students"));
+const TeacherArea = lazyWithReload(() => import("./pages/teacher/TeacherArea"));
+const TeacherOverview = lazyWithReload(() => import("./pages/teacher/Overview"));
+const Submissions = lazyWithReload(() => import("./pages/teacher/Submissions"));
+const Students = lazyWithReload(() => import("./pages/teacher/Students"));
 
-const AdminArea = lazy(() => import("./pages/admin/AdminArea"));
-const AdminOverview = lazy(() => import("./pages/admin/Overview"));
-const AdminUsers = lazy(() => import("./pages/admin/Users"));
+const AdminArea = lazyWithReload(() => import("./pages/admin/AdminArea"));
+const AdminOverview = lazyWithReload(() => import("./pages/admin/Overview"));
+const AdminUsers = lazyWithReload(() => import("./pages/admin/Users"));
 
 const lazyPage = (el) => <Suspense fallback={<PageLoader />}>{el}</Suspense>;
 

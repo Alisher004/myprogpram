@@ -6,6 +6,7 @@ import { useI18n } from "../../i18n/I18nContext";
 import { useAsyncAction } from "../../hooks/useAsyncAction";
 import { ShellHead } from "../../components/AppShell";
 import { formatDate } from "../../lib/format";
+import EmailVerification from "./EmailVerification";
 
 export default function StudentProfile() {
   const { t, lang } = useI18n();
@@ -44,6 +45,9 @@ export default function StudentProfile() {
             <div>
               <dt>{t("auth.email")}</dt>
               <dd>{user.email}</dd>
+              <dd>
+                <EmailVerification />
+              </dd>
             </div>
             <div>
               <dt>{t("teacher.joined")}</dt>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
 import { useI18n } from "../../i18n/I18nContext";
@@ -8,6 +8,7 @@ import { reviewSubmission, watchPendingSubmissions, watchRecentSubmissions } fro
 import { StatusBadge } from "../../components/HomeworkSubmit";
 import { ShellHead } from "../../components/AppShell";
 import { Empty, LoadError, Loading } from "../../components/AsyncState";
+import { useLiveQuery } from "../../hooks/useLiveQuery";
 import { formatDate } from "../../lib/format";
 import { ROUTES } from "../../lib/routes";
 
@@ -128,21 +129,16 @@ function SubmissionCard({ submission, readOnly }) {
 // readOnly: admins monitor submissions; grading is the teacher's job
 export default function Submissions({ mode, readOnly = false }) {
   const { t } = useI18n();
-  const [items, setItems] = useState(null);
-  const [failed, setFailed] = useState(false);
-
-  useEffect(() => {
-    setItems(null);
-    setFailed(false);
-    const watch = mode === "pending" ? watchPendingSubmissions : watchRecentSubmissions;
-    return watch(setItems, () => setFailed(true));
-  }, [mode]);
+  const { data: items, failed, retry } = useLiveQuery(
+    (next, fail) => (mode === "pending" ? watchPendingSubmissions : watchRecentSubmissions)(next, fail),
+    [mode]
+  );
 
   return (
     <>
       <ShellHead title={t(`teacher.tabs.${mode}`)} lead={t(`teacher.lead.${mode}`)} />
       {failed ? (
-        <LoadError />
+        <LoadError onRetry={retry} />
       ) : !items ? (
         <Loading />
       ) : items.length === 0 ? (

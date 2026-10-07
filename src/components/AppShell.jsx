@@ -8,6 +8,7 @@ import { PageLoader } from "../auth/RequireRole";
 import Logo from "./Logo";
 import LanguageSelect from "./LanguageSelect";
 import NavIcon from "./NavIcon";
+import ErrorBoundary from "./ErrorBoundary";
 
 // Signed-in workspace shared by all three roles. Each role passes its own
 // navigation; the shell differs per area by tone (student: light sidebar,
@@ -83,9 +84,11 @@ export default function AppShell({ area, nav, footer }) {
         </header>
 
         <main className="shell-content">
-          <Suspense fallback={<PageLoader />}>
-            <Outlet />
-          </Suspense>
+          <ErrorBoundary resetKey={pathname} inline>
+            <Suspense fallback={<PageLoader />}>
+              <Outlet />
+            </Suspense>
+          </ErrorBoundary>
         </main>
       </div>
     </div>

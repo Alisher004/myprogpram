@@ -8,6 +8,8 @@ const fb = vi.hoisted(() => ({
   signOut: vi.fn(async () => {}),
   setDoc: vi.fn(async () => {}),
   createUser: vi.fn(),
+  sendEmailVerification: vi.fn(async () => {}),
+  resetEmail: vi.fn(async () => {}),
 }));
 
 vi.mock("firebase/auth", () => ({
@@ -18,6 +20,8 @@ vi.mock("firebase/auth", () => ({
   createUserWithEmailAndPassword: (...a) => fb.createUser(...a),
   updateProfile: vi.fn(async () => {}),
   signOut: (...a) => fb.signOut(...a),
+  sendEmailVerification: (...a) => fb.sendEmailVerification(...a),
+  sendPasswordResetEmail: (...a) => fb.resetEmail(...a),
 }));
 vi.mock("firebase/firestore", () => ({
   doc: (_db, col, id) => ({ col, id }),
@@ -95,6 +99,19 @@ describe("credentials and registration", () => {
     await act(() => result.current.signUpStudent("Айгерим", "new@test.dev", "secret1"));
     expect(fb.setDoc).toHaveBeenCalledTimes(1);
     expect(fb.setDoc.mock.calls[0][1]).toMatchObject({ name: "Айгерим", role: "student", email: "new@test.dev" });
+    await act(async () => {});
+    expect(fb.sendEmailVerification).toHaveBeenCalledTimes(1);
+  });
+
+  it("registration still succeeds if the verification email can't be sent (even a sync throw)", async () => {
+    fb.createUser.mockResolvedValueOnce({ user: { uid: "new2", email: "new2@test.dev" } });
+    fb.sendEmailVerification.mockImplementationOnce(() => {
+      throw Object.assign(new Error("quota"), { code: "auth/too-many-requests" });
+    });
+    const result = auth();
+    await expect(act(() => result.current.signUpStudent("Б", "new2@test.dev", "secret1"))).resolves.toMatchObject({ role: "student" });
+    await act(async () => {});
+    expect(result.current.portalPending).toBe(false);
   });
 
   it("portalPending is true only while a sign-in is being checked", async () => {
@@ -112,5 +129,21 @@ describe("credentials and registration", () => {
       await pending;
     });
     expect(result.current.portalPending).toBe(false);
+  });
+});
+
+describe("password reset (enumeration safety)", () => {
+  it("unknown email resolves exactly like a known one", async () => {
+    const result = auth();
+    fb.resetEmail.mockRejectedValueOnce({ code: "auth/user-not-found" });
+    await expect(act(() => result.current.sendPasswordReset("nobody@test.dev"))).resolves.toBeUndefined();
+    fb.resetEmail.mockResolvedValueOnce();
+    await expect(act(() => result.current.sendPasswordReset("someone@test.dev"))).resolves.toBeUndefined();
+  });
+
+  it("format and rate-limit errors still surface", async () => {
+    const result = auth();
+    fb.resetEmail.mockRejectedValueOnce({ code: "auth/invalid-email" });
+    await expect(act(() => result.current.sendPasswordReset("bad"))).rejects.toMatchObject({ code: "auth/invalid-email" });
   });
 });

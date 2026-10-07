@@ -4,6 +4,7 @@ import { useAuth } from "../../auth/AuthContext";
 import { useI18n } from "../../i18n/I18nContext";
 import { getLesson } from "../../data/lessons";
 import { watchPendingSubmissions } from "../../data/submissions";
+import { useLiveQuery } from "../../hooks/useLiveQuery";
 import { countReviewedBy, countUsersByRole } from "../../data/stats";
 import { ShellHead } from "../../components/AppShell";
 import StatCard from "../../components/StatCard";
@@ -14,11 +15,9 @@ import { ROUTES } from "../../lib/routes";
 export default function TeacherOverview() {
   const { t, pick, lang } = useI18n();
   const { user, profile } = useAuth();
-  const [pending, setPending] = useState(null);
-  const [failed, setFailed] = useState(false);
+  const { data: pending, failed, retry } = useLiveQuery(watchPendingSubmissions, []);
   const [counts, setCounts] = useState({});
 
-  useEffect(() => watchPendingSubmissions(setPending, () => setFailed(true)), []);
   useEffect(() => {
     Promise.all([countUsersByRole("student"), countReviewedBy(user.uid)])
       .then(([students, reviewed]) => setCounts({ students, reviewed }))
@@ -50,7 +49,7 @@ export default function TeacherOverview() {
       <section className="panel">
         <h2 className="panel-title">{t("teacher.oldestWaiting")}</h2>
         {failed ? (
-          <LoadError />
+          <LoadError onRetry={retry} />
         ) : !pending ? (
           <Loading />
         ) : oldest.length === 0 ? (

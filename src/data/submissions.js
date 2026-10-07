@@ -2,7 +2,6 @@ import {
   collection,
   doc,
   limit,
-  onSnapshot,
   orderBy,
   query,
   serverTimestamp,
@@ -11,6 +10,7 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../lib/firebase";
+import { subscribeWithTimeout } from "../lib/subscribe";
 
 // submissions/{uid}_{lessonId}
 // { uid, studentName, studentEmail, lessonId, url, note, status, submittedAt,
@@ -33,16 +33,17 @@ export function isAllowedLink(value) {
 
 const withId = (snap) => ({ id: snap.id, ...snap.data() });
 
-export function watchMySubmission(uid, lessonId, cb) {
-  return onSnapshot(
+// All watchers: onError fires on a listener error or if no answer arrives in time
+export function watchMySubmission(uid, lessonId, cb, onError) {
+  return subscribeWithTimeout(
     doc(db, "submissions", submissionId(uid, lessonId)),
     (snap) => cb(snap.exists() ? withId(snap) : null),
-    () => cb(null)
+    onError
   );
 }
 
 export function watchMySubmissions(uid, cb, onError) {
-  return onSnapshot(
+  return subscribeWithTimeout(
     query(submissionsRef(), where("uid", "==", uid)),
     (snap) => cb(snap.docs.map(withId).sort((a, b) => a.lessonId - b.lessonId)),
     onError
@@ -65,7 +66,7 @@ export function submitHomework({ user, profile, lessonId, url, note }) {
 
 export function watchPendingSubmissions(cb, onError) {
   // Single-field filter + client-side sort avoids needing a composite index
-  return onSnapshot(
+  return subscribeWithTimeout(
     query(submissionsRef(), where("status", "==", "pending")),
     (snap) => cb(snap.docs.map(withId).sort((a, b) => (a.submittedAt?.seconds ?? 0) - (b.submittedAt?.seconds ?? 0))),
     onError
@@ -73,7 +74,7 @@ export function watchPendingSubmissions(cb, onError) {
 }
 
 export function watchRecentSubmissions(cb, onError, max = 100) {
-  return onSnapshot(
+  return subscribeWithTimeout(
     query(submissionsRef(), orderBy("submittedAt", "desc"), limit(max)),
     (snap) => cb(snap.docs.map(withId)),
     onError

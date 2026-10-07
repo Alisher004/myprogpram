@@ -228,6 +228,26 @@ export async function queryAs(idToken, structuredQuery) {
   });
 }
 
+// Emails the Auth emulator "sent" (password reset, verification)
+export async function sentEmails(requestType) {
+  const res = await fetch(`${AUTH}/emulator/v1/projects/${PROJECT_ID}/oobCodes`).then((r) => r.json());
+  return (res.oobCodes ?? []).filter((c) => !requestType || c.requestType === requestType);
+}
+
+// Applies an emailed action code (what clicking the link in the email does)
+export async function applyActionCode(oobCode) {
+  const res = await fetch(`${AUTH}/identitytoolkit.googleapis.com/v1/accounts:update?key=demo-key`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ oobCode }),
+  });
+  if (!res.ok) throw new Error(`applyActionCode failed: ${res.status}`);
+}
+
+export async function deleteDoc(path) {
+  await fetch(`${DOCS}/${path}`, { method: "DELETE", headers: owner });
+}
+
 export async function seedAccount({ email, name, role }) {
   const { localId, idToken } = await createAuthUser(email);
   await writeDoc(`users/${localId}`, { name, email, photoURL: null, role, createdAt: new Date("2026-09-01") });

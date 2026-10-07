@@ -1,11 +1,13 @@
-import { useEffect, useMemo, useState } from "react";
-import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
+import { useMemo, useState } from "react";
+import { collection, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../lib/firebase";
 import { useAuth } from "../../auth/AuthContext";
 import { useI18n } from "../../i18n/I18nContext";
 import { useAsyncAction } from "../../hooks/useAsyncAction";
 import { ShellHead } from "../../components/AppShell";
 import { Empty, LoadError, Loading } from "../../components/AsyncState";
+import { useLiveQuery } from "../../hooks/useLiveQuery";
+import { subscribeWithTimeout } from "../../lib/subscribe";
 import { formatDate } from "../../lib/format";
 import { ROLES } from "../../lib/routes";
 
@@ -55,20 +57,13 @@ function RoleSelect({ user, isSelf }) {
 export default function AdminUsers() {
   const { t, lang } = useI18n();
   const { user: me } = useAuth();
-  const [users, setUsers] = useState(null);
-  const [failed, setFailed] = useState(false);
+  const { data: users, failed, retry } = useLiveQuery(
+    (next, fail) => subscribeWithTimeout(collection(db, "users"), (snap) => next(snap.docs.map((d) => ({ id: d.id, ...d.data() }))), fail),
+    []
+  );
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
 
-  useEffect(
-    () =>
-      onSnapshot(
-        collection(db, "users"),
-        (snap) => setUsers(snap.docs.map((d) => ({ id: d.id, ...d.data() }))),
-        () => setFailed(true)
-      ),
-    []
-  );
 
   const counts = useMemo(() => {
     const c = { all: users?.length ?? 0 };
@@ -115,7 +110,7 @@ export default function AdminUsers() {
       </div>
 
       {failed ? (
-        <LoadError />
+        <LoadError onRetry={retry} />
       ) : !users ? (
         <Loading />
       ) : visible.length === 0 ? (

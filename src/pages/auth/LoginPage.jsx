@@ -8,6 +8,7 @@ import Logo from "../../components/Logo";
 import LanguageSelect from "../../components/LanguageSelect";
 import { PageLoader } from "../../auth/RequireRole";
 import { auth } from "../../lib/firebase";
+import PasswordResetForm from "./PasswordResetForm";
 
 // portal: which role this form is for. Only the student portal offers sign-up.
 function LoginForm({ portal, initialMode }) {
@@ -20,6 +21,7 @@ function LoginForm({ portal, initialMode }) {
   const [mode, setMode] = useState(canSignUp ? initialMode : "login");
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");
+  const [resetting, setResetting] = useState(false);
 
   const errorText = (err) => {
     if (err.code === "app/wrong-portal") return t(`auth.errors.wrongPortal.${portal}`);
@@ -57,6 +59,10 @@ function LoginForm({ portal, initialMode }) {
     value: form[name],
     onChange: (e) => setForm((f) => ({ ...f, [name]: e.target.value })),
   });
+
+  if (resetting) {
+    return <PasswordResetForm initialEmail={form.email} onBack={() => setResetting(false)} />;
+  }
 
   return (
     <>
@@ -101,6 +107,12 @@ function LoginForm({ portal, initialMode }) {
           {pending ? t("common.wait") : t(mode === "signup" ? "auth.submitSignup" : "auth.submitLogin")}
         </button>
       </form>
+
+      {mode === "login" && (
+        <button type="button" className="link-button" onClick={() => setResetting(true)}>
+          {t("auth.reset.link")}
+        </button>
+      )}
 
       {canSignUp && (
         <Link

@@ -984,3 +984,20 @@ a.link-button { display: inline-block; }
 .profile-facts { display: grid; gap: 10px; margin: 0; }
 .profile-facts dt { font-size: 0.8rem; font-weight: 700; color: var(--text-soft); text-transform: uppercase; letter-spacing: .04em; }
 .profile-facts dd { margin: 2px 0 0; }
+
+/* ===== Error / retry states ===== */
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.load-error { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.load-error .form-error { flex: 1 1 260px; }
+.error-fallback { max-width: 520px; margin: 12vh auto; padding: 0 16px; display: grid; gap: 14px; }
+.error-fallback h1 { font-size: 1.5rem; margin: 0; }
+.error-fallback p { margin: 0; }
+.error-fallback details { font-size: 0.85rem; color: var(--text-soft); }
+.error-fallback pre { white-space: pre-wrap; word-break: break-word; background: var(--surface-alt); padding: 10px; border-radius: var(--radius-sm); }
+.error-fallback-inline { margin: 24px 0; max-width: 640px; }
+.auth-notice { color: var(--accent-ink); background: var(--accent-soft); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 0.9rem; margin: 0; }
+.verify-status { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.auth-card .link-button { display: block; }
+.verify-block { display: grid; gap: 8px; }
+.verify-status { margin: 4px 0 0; }
+.status-badge { white-space: normal; }

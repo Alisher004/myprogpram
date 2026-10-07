@@ -10,12 +10,19 @@ export function Loading() {
   );
 }
 
-export function LoadError() {
+// onRetry: re-run the failed load. The caller swaps this component for <Loading />
+// as soon as a retry starts, so repeated clicks can't stack requests.
+export function LoadError({ onRetry }) {
   const { t } = useI18n();
   return (
-    <p className="form-error" role="alert">
-      {t("common.loadError")}
-    </p>
+    <div className="load-error" role="alert">
+      <p className="form-error">{t("common.loadError")}</p>
+      {onRetry && (
+        <button type="button" className="btn btn-outline btn-sm" onClick={onRetry}>
+          {t("common.retry")}
+        </button>
+      )}
+    </div>
   );
 }
 
