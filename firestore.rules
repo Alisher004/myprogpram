@@ -1,0 +1,118 @@
+rules_version = '2';
+
+// Server-side authorization for КодБилим. The web app talks to Firestore directly,
+// so these rules ARE the API permission layer: every read/write from any client
+// (our UI, a hand-written fetch, a modified frontend) is checked here.
+//
+// Roles live in users/{uid}.role: "student" | "teacher" | "admin".
+// - New accounts can only be students.
+// - Only an admin can change a role, never their own.
+// - Duplicate records are impossible by design: every document id is derived
+//   from the caller (users/{uid}, progress/{uid}, submissions/{uid}_{lessonId}),
+//   so repeating a request overwrites the same document instead of creating a new one.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function isSelf(uid) { return signedIn() && request.auth.uid == uid; }
+    // Missing users doc → get() fails → every role check is false (deny by default)
+    function myRole() { return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role; }
+    function hasRole(r) { return signedIn() && myRole() == r; }
+    function isStudent() { return hasRole("student"); }
+    function isTeacher() { return hasRole("teacher"); }
+    function isAdmin() { return hasRole("admin"); }
+    function isStaff() { return signedIn() && myRole() in ["teacher", "admin"]; }
+    function changed() { return request.resource.data.diff(resource.data).affectedKeys(); }
+
+    match /users/{uid} {
+      // Teachers see student accounts only (their roster); admins see everyone.
+      // For list queries Firestore requires the query itself to filter role == "student".
+      allow get: if isSelf(uid) || isAdmin() || (isTeacher() && resource.data.role == "student");
+      allow list: if isAdmin() || (isTeacher() && resource.data.role == "student");
+
+      // Self-registration: student role only, own email, server timestamp
+      allow create: if isSelf(uid)
+        && request.resource.data.keys().hasOnly(["name", "email", "photoURL", "role", "createdAt"])
+        && request.resource.data.role == "student"
+        && request.resource.data.email == request.auth.token.email
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 80
+        && request.resource.data.createdAt == request.time;
+
+      // Users may edit their display name/photo — nothing else (not role, not email)
+      allow update: if isSelf(uid)
+        && changed().hasOnly(["name", "photoURL"])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 80;
+
+      // Admins change roles of other people only (no self-demotion / lock-out)
+      allow update: if isAdmin()
+        && uid != request.auth.uid
+        && changed().hasOnly(["role"])
+        && request.resource.data.role in ["student", "teacher", "admin"];
+
+      allow delete: if false;
+    }
+
+    // progress/{uid} = { completed: { "<lessonId>": timestamp }, updatedAt }
+    match /progress/{uid} {
+      allow read: if isSelf(uid) || isStaff();
+      allow write: if isSelf(uid) && isStudent()
+        && request.resource.data.keys().hasOnly(["completed", "updatedAt"])
+        && request.resource.data.completed is map
+        && request.resource.data.completed.size() <= 60;
+    }
+
+    // submissions/{uid}_{lessonId}: one homework submission per student per lesson.
+    // Students write the link fields; teachers write the review fields.
+    match /submissions/{id} {
+      function validLink(d) {
+        return d.url is string && d.url.size() <= 500 && d.url.matches("https://.+")
+          && d.note is string && d.note.size() <= 1000
+          && d.lessonId is int && d.lessonId >= 1 && d.lessonId <= 60;
+      }
+      function studentFields() {
+        return ["uid", "studentName", "studentEmail", "lessonId", "url", "note", "status", "submittedAt"];
+      }
+      function reviewFields() {
+        return ["status", "grade", "feedback", "reviewedAt", "reviewedBy", "reviewerName"];
+      }
+      function validStudentWrite() {
+        return isStudent()
+          && request.resource.data.uid == request.auth.uid
+          // The teacher panel shows these to identify the student: they must be the caller's own
+          && request.resource.data.studentEmail == request.auth.token.email
+          && request.resource.data.studentName is string
+          && request.resource.data.studentName.size() > 0 && request.resource.data.studentName.size() <= 80
+          && request.resource.data.status == "pending"
+          && request.resource.data.keys().hasOnly(studentFields())
+          && request.resource.data.submittedAt == request.time
+          && validLink(request.resource.data);
+      }
+
+      // Own submission by id (works before it exists); staff see all
+      allow get: if (signedIn() && id.matches(request.auth.uid + "_[0-9]+")) || isStaff();
+      allow list: if (signedIn() && resource.data.uid == request.auth.uid) || isStaff();
+
+      allow create: if validStudentWrite()
+        && id == request.auth.uid + "_" + string(request.resource.data.lessonId);
+
+      // Resubmitting replaces the doc (drops the old review). An accepted submission is final.
+      allow update: if validStudentWrite()
+        && resource.data.uid == request.auth.uid
+        && resource.data.status != "accepted"
+        && request.resource.data.lessonId == resource.data.lessonId;
+
+      // Grading is the teacher's job; admins monitor read-only
+      allow update: if isTeacher()
+        && changed().hasOnly(reviewFields())
+        && request.resource.data.status in ["accepted", "needs_work"]
+        && request.resource.data.grade is int && request.resource.data.grade >= 1 && request.resource.data.grade <= 5
+        && request.resource.data.feedback is string && request.resource.data.feedback.size() <= 2000
+        && request.resource.data.reviewedBy == request.auth.uid
+        && request.resource.data.reviewedAt == request.time;
+
+      allow delete: if false;
+    }
+  }
+}
