@@ -14,6 +14,16 @@ const fb = vi.hoisted(() => ({
 
 vi.mock("firebase/auth", () => ({
   GoogleAuthProvider: class {},
+  OAuthProvider: class {
+    constructor(id) {
+      this.providerId = id;
+      this.scopes = [];
+      fb.lastProvider = this;
+    }
+    addScope(scope) {
+      this.scopes.push(scope);
+    }
+  },
   onAuthStateChanged: () => () => {},
   signInWithEmailAndPassword: (...a) => fb.signIn(...a),
   signInWithPopup: (...a) => fb.signIn(...a),
@@ -145,5 +155,30 @@ describe("password reset (enumeration safety)", () => {
     const result = auth();
     fb.resetEmail.mockRejectedValueOnce({ code: "auth/invalid-email" });
     await expect(act(() => result.current.sendPasswordReset("bad"))).rejects.toMatchObject({ code: "auth/invalid-email" });
+  });
+});
+
+describe("Sign in with Apple", () => {
+  it("uses the apple.com provider with email + name scopes", async () => {
+    fb.signIn.mockImplementationOnce(async () => ({ user: { uid: "apple-1", email: "x@privaterelay.appleid.com" } }));
+    fb.profiles["apple-1"] = { role: "student" };
+    const result = auth();
+    await act(() => result.current.signInWithApple("student"));
+    expect(fb.lastProvider).toMatchObject({ providerId: "apple.com", scopes: ["email", "name"] });
+  });
+
+  it("an Apple account with a teacher role is refused at the student portal and signed out", async () => {
+    fb.signIn.mockImplementationOnce(async () => ({ user: { uid: "apple-t", email: "t@icloud.com" } }));
+    fb.profiles["apple-t"] = { role: "teacher" };
+    const result = auth();
+    await expect(act(() => result.current.signInWithApple("student"))).rejects.toMatchObject({ code: "app/wrong-portal" });
+    expect(fb.signOut).toHaveBeenCalledTimes(1);
+  });
+
+  it("a first-time Apple user without a shared name still gets a student profile", async () => {
+    fb.signIn.mockImplementationOnce(async () => ({ user: { uid: "apple-new", email: "abc@privaterelay.appleid.com", displayName: null } }));
+    const result = auth();
+    await act(() => result.current.signInWithApple("student"));
+    expect(fb.setDoc.mock.calls[0][1]).toMatchObject({ role: "student", name: "abc" });
   });
 });

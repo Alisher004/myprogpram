@@ -18,6 +18,7 @@ const base = (overrides = {}) => ({
   portalPending: false,
   signInWithEmail: vi.fn(),
   signInWithGoogle: vi.fn(),
+  signInWithApple: vi.fn(),
   signUpStudent: vi.fn(),
   ...overrides,
 });
@@ -136,4 +137,40 @@ describe("LoginPage", () => {
     expect(document.querySelector("form")).toBeTruthy();
     firebase.auth.currentUser = null;
   });
+
+  it.each([ROUTES.login, ROUTES.register, ROUTES.teacher.login, ROUTES.admin.login])(
+    "%s shows Google and Apple sign-in and no extra lead text",
+    (path) => {
+      state.value = base();
+      renderAt(path, routes);
+      expect(screen.getByRole("button", { name: kg.auth.google })).toBeTruthy();
+      expect(screen.getByRole("button", { name: kg.auth.apple })).toBeTruthy();
+      expect(document.querySelector(".auth-lead")).toBeNull();
+      expect(document.querySelectorAll(".social-mark")).toHaveLength(2);
+    }
+  );
+
+  it("Apple sign-in goes through the same portal and double-click guard", async () => {
+    let release;
+    const apple = vi.fn(() => new Promise((r) => (release = r)));
+    state.value = base({ signInWithApple: apple });
+    renderAt(ROUTES.teacher.login, routes);
+    const button = screen.getByRole("button", { name: kg.auth.apple });
+    act(() => {
+      fireEvent.click(button);
+      fireEvent.click(button);
+    });
+    expect(apple).toHaveBeenCalledTimes(1);
+    expect(apple).toHaveBeenCalledWith("teacher");
+    expect(screen.getByRole("button", { name: kg.auth.google }).disabled).toBe(true);
+    await act(async () => release());
+  });
+
+  it("an account registered with another method gets a clear message", async () => {
+    state.value = base({ signInWithApple: vi.fn().mockRejectedValue({ code: "auth/account-exists-with-different-credential" }) });
+    renderAt(ROUTES.login, routes);
+    await act(async () => fireEvent.click(screen.getByRole("button", { name: kg.auth.apple })));
+    expect(screen.getByRole("alert").textContent).toBe(kg.auth.errors["auth/account-exists-with-different-credential"]);
+  });
 });
+
