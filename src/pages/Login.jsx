@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import { useI18n } from "../i18n/I18nContext";
+import Logo from "../components/Logo";
 
 export default function Login() {
   const { t } = useI18n();
@@ -54,6 +55,9 @@ export default function Login() {
     <section className="tight">
       <div className="container auth-wrap">
         <div className="card auth-card">
+          <div className="auth-logo">
+            <Logo tone="light" size="lg" tagline />
+          </div>
           <h1>{t(mode === "signup" ? "auth.signupTitle" : "auth.loginTitle")}</h1>
           <p className="auth-lead">{t("auth.loginLead")}</p>
 

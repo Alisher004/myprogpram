@@ -3,6 +3,7 @@ import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useI18n } from "../i18n/I18nContext";
 import { useAuth } from "../auth/AuthContext";
 import { STAFF_ROLES } from "../auth/RequireAuth";
+import Logo from "./Logo";
 
 const NAV = [
   { to: "/", key: "home" },
@@ -10,16 +11,6 @@ const NAV = [
   { to: "/resources", key: "resources" },
   { to: "/career", key: "career" },
 ];
-
-function Brand() {
-  const { t } = useI18n();
-  return (
-    <>
-      <span className="dot"></span>
-      <span>{t("common.brand")}</span>
-    </>
-  );
-}
 
 function AuthControls() {
   const { t } = useI18n();
@@ -58,7 +49,7 @@ function Header() {
     <header className="site-header">
       <div className="container nav">
         <Link to="/" className="brand">
-          <Brand />
+          <Logo />
         </Link>
         <button className="nav-toggle" aria-label={t("common.menu")} onClick={() => setOpen((o) => !o)}>
           <span></span>
@@ -80,9 +71,15 @@ function Header() {
               {t(`common.nav.${item.key}`)}
             </NavLink>
           ))}
+          {/* On phones the account buttons live inside the ☰ menu */}
+          <div className="nav-auth nav-auth-mobile" onClick={() => setOpen(false)}>
+            <AuthControls />
+          </div>
         </nav>
         <div className="nav-right">
-          <AuthControls />
+          <div className="nav-auth nav-auth-desktop">
+            <AuthControls />
+          </div>
           <div className="lang-toggle">
             {["kg", "ru"].map((code) => (
               <button key={code} className={lang === code ? "active" : undefined} onClick={() => setLang(code)}>
@@ -103,7 +100,7 @@ function Footer() {
       <div className="container">
         <div className="foot-top">
           <div className="brand">
-            <Brand />
+            <Logo tagline />
           </div>
           <nav>
             {NAV.map((item) => (

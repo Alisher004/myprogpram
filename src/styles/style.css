@@ -7,8 +7,11 @@
   --text: #1b2233;
   --text-soft: #5b6478;
   --border: #e3e7f1;
-  --primary: #4f6df5;
-  --primary-dark: #3b4fd6;
+  /* Brand colours sampled from the logo */
+  --brand-navy: #111d45;
+  --brand-blue: #0556f9;
+  --primary: #0556f9;
+  --primary-dark: #0443c4;
   --accent: #22c1a4;
   --accent-soft: #e4f9f5;
   --warn: #ff8a3d;
@@ -86,7 +89,7 @@ p { margin: 0 0 16px; color: var(--text-soft); }
 }
 .btn:hover { text-decoration: none; transform: translateY(-1px); }
 .btn-primary { background: var(--primary); color: #fff; }
-.btn-primary:hover { background: var(--primary-dark); box-shadow: 0 6px 18px rgba(79,109,245,.35); }
+.btn-primary:hover { background: var(--primary-dark); box-shadow: 0 6px 18px rgba(5,86,249,.35); }
 .btn-outline { background: transparent; border-color: var(--border); color: var(--text); }
 .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
 .hero .btn-outline { border-color: rgba(255,255,255,0.45); color: #fff; }
@@ -120,7 +123,6 @@ header.site-header {
   font-size: 1.15rem;
   color: #fff;
 }
-.brand .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px rgba(34,193,164,.25); }
 .brand:hover { text-decoration: none; }
 
 .nav-links {
@@ -789,8 +791,6 @@ footer.site-footer .fine { padding-top: 20px; font-size: 0.82rem; color: rgba(25
 }
 .staff-brand { display: flex; align-items: center; gap: 10px; color: #fff; font-weight: 800; font-size: 1.1rem; padding: 0 8px 18px; }
 .staff-brand:hover { text-decoration: none; }
-.staff-brand .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--staff-accent); box-shadow: 0 0 0 4px rgba(255,255,255,0.08); }
-.staff-brand small { display: block; font-size: 0.7rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--staff-accent); }
 .staff-nav { display: flex; flex-direction: column; gap: 2px; flex: 1; }
 .staff-nav-title { margin: 16px 8px 6px; font-size: 0.7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
 .staff-link { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 9px 12px; border-radius: var(--radius-sm); color: rgba(255,255,255,0.78); font-weight: 600; font-size: 0.92rem; }
@@ -842,4 +842,41 @@ footer.site-footer .fine { padding-top: 20px; font-size: 0.82rem; color: rgba(25
   .staff-back { margin-left: auto; }
   .staff-topbar { padding: 10px 16px; position: static; }
   .staff-content { padding: 20px 16px; }
+}
+
+/* ===== Logo ===== */
+.logo { display: inline-flex; align-items: center; gap: 10px; line-height: 1; }
+.logo-mark { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 11px; background: #fff; }
+.logo-mark img { width: 88%; height: 88%; object-fit: contain; display: block; }
+.logo-text { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.wordmark { font-family: "Montserrat", "Arial Black", system-ui, sans-serif; font-weight: 800; font-size: 1.3rem; letter-spacing: -0.02em; white-space: nowrap; }
+.wm-bilim { color: var(--brand-blue); }
+.logo-dark .wm-kod { color: #fff; }
+.logo-dark .wm-bilim { color: #3b7bff; } /* brand blue, lifted for contrast on dark navy */
+.logo-light .wm-kod { color: var(--brand-navy); }
+.logo-tagline { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.01em; }
+.logo-dark .logo-tagline { color: rgba(255,255,255,0.65); }
+.logo-light .logo-tagline { color: var(--brand-navy); }
+.logo-sub { font-size: 0.68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--staff-accent, var(--accent)); }
+
+.logo-sm .logo-mark { width: 34px; height: 34px; border-radius: 9px; }
+.logo-sm .wordmark { font-size: 1.1rem; }
+/* Login: no tile, the mark sits on the white card like the original artwork */
+.logo-lg { flex-direction: column; gap: 8px; text-align: center; }
+.logo-lg .logo-mark { width: 96px; height: 96px; background: none; }
+.logo-lg .logo-mark img { width: 100%; height: 100%; }
+.logo-lg .logo-text { align-items: center; }
+.logo-lg .wordmark { font-size: 2rem; }
+.auth-logo { display: flex; justify-content: center; margin-bottom: 18px; }
+
+@media (max-width: 420px) {
+  .site-header .logo-mark { width: 34px; height: 34px; }
+  .site-header .wordmark { font-size: 1.1rem; }
+}
+
+.nav-auth { display: flex; align-items: center; gap: 8px; }
+.nav-auth-mobile { display: none; }
+@media (max-width: 860px) {
+  .nav-auth-desktop { display: none; }
+  .nav-links.open .nav-auth-mobile { display: flex; flex-wrap: wrap; padding-top: 10px; margin-top: 6px; border-top: 1px solid rgba(255,255,255,0.1); }
 }

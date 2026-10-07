@@ -3,6 +3,7 @@ import { Link, NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
 import { useI18n } from "../../i18n/I18nContext";
 import { watchPendingSubmissions } from "../../data/submissions";
+import Logo from "../../components/Logo";
 
 function usePendingCount() {
   const [count, setCount] = useState(0);
@@ -31,11 +32,7 @@ export default function StaffLayout() {
     <div className={`staff staff-${role}`}>
       <aside className="staff-sidebar">
         <Link to="/teacher" className="staff-brand">
-          <span className="dot"></span>
-          <span>
-            {t("common.brand")}
-            <small>{t("staff.workspace")}</small>
-          </span>
+          <Logo size="sm" sub={t("staff.workspace")} />
         </Link>
 
         <nav className="staff-nav">
