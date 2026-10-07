@@ -32,6 +32,34 @@ Firebase'сиз деле сайт иштейт — кирүү жана прог�
 - Даректи жашыруу коопсуздук эмес. Негизги коргоо `firestore.rules` файлында: ар бир окуу жана жазуу сервердин өзүндө ролго жараша текшерилет.
 - **Биринчи админди дайындоо:** Firestore Console → `users/{uid}` → `role: "admin"`. Калгандарын админ панелинен дайындаса болот.
 
+## Тесттер
+
+### Талаптар
+- Node.js 20+
+- **Java 21+** (Firestore эмулятору үчүн гана). Скрипт аны PATH, `JAVA_HOME` жана Homebrew'дун
+  `openjdk` папкаларынан өзү табат, эч нерсе орнотпойт. Жок болсо так билдирүү чыгат.
+- **Firebase CLI**: `npm i -g firebase-tools`
+- **Chrome** (E2E үчүн). Башка жерде болсо: `CHROME_PATH=/path/to/chrome npm run test:e2e`
+
+### Командалар
+| Команда | Эмне кылат |
+| --- | --- |
+| `npm test` | Unit тесттер (Java/эмулятор керек эмес) |
+| `npm run test:watch` | Unit тесттер, өзгөртүү сайын кайра иштейт |
+| `npm run test:rules` | Firestore эрежелери, эмулятордо |
+| `npm run test:e2e` | Браузер тесттери: колдонмо build кылынып, Auth + Firestore эмуляторлоруна туташат |
+| `npm run test:all` | Үчөө тең катары менен |
+
+Эмулятор `node scripts/emulators.mjs` аркылуу `demo-codebilim` долбоору менен иштейт, ошондуктан
+тесттер production'го эч качан жазбайт. Сценарийлердин толук тизмеси: [tests/README.md](tests/README.md).
+
+### Troubleshooting
+- **"Java not found"**: `brew install openjdk` же `JAVA_HOME` коюңуз. Unit тесттер Java'сыз иштейт.
+- **Порт бош эмес (8080, 9099, 4410)**: мурунку эмулятор же `vite preview` иштеп калган. `lsof -i :8080` менен табып токтотуңуз.
+- **"Chrome not found"**: `CHROME_PATH` коюңуз.
+- **E2E'де кокус redirect timeout**: эмулятор HTTP/1.1 колдонот жана бир табда тез-тез кайра жүктөөдө Chrome'дун
+  6 байланыш чеги толуп калышы мүмкүн. Ошондуктан redirect тесттери ар бир URL'ди жаңы табда ачат.
+
 ## Структура
 
 | Жол | Эмне |

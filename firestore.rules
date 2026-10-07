@@ -80,6 +80,10 @@ service cloud.firestore {
       function validStudentWrite() {
         return isStudent()
           && request.resource.data.uid == request.auth.uid
+          // The teacher panel shows these to identify the student: they must be the caller's own
+          && request.resource.data.studentEmail == request.auth.token.email
+          && request.resource.data.studentName is string
+          && request.resource.data.studentName.size() > 0 && request.resource.data.studentName.size() <= 80
           && request.resource.data.status == "pending"
           && request.resource.data.keys().hasOnly(studentFields())
           && request.resource.data.submittedAt == request.time

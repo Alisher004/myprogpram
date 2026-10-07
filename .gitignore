@@ -3,3 +3,6 @@ dist
 .env*
 !.env.example
 .DS_Store
+
+# Firebase emulator logs
+*-debug.log
