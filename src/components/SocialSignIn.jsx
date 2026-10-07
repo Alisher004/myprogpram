@@ -1,4 +1,5 @@
 import { useI18n } from "../i18n/I18nContext";
+import { APPLE_SIGNIN_ENABLED } from "../lib/features";
 
 // Provider marks are the official logos (brand colours are the providers', not ours)
 function GoogleMark() {
@@ -24,7 +25,7 @@ function AppleMark() {
 }
 
 // Google + Apple buttons. `onSignIn(provider)` runs inside the form's double-click guard.
-export default function SocialSignIn({ disabled, onSignIn }) {
+export default function SocialSignIn({ disabled, onSignIn, showApple = APPLE_SIGNIN_ENABLED }) {
   const { t } = useI18n();
   return (
     <div className="social-signin">
@@ -32,10 +33,12 @@ export default function SocialSignIn({ disabled, onSignIn }) {
         <GoogleMark />
         <span>{t("auth.google")}</span>
       </button>
-      <button type="button" className="btn btn-social btn-apple" disabled={disabled} onClick={() => onSignIn("apple")}>
-        <AppleMark />
-        <span>{t("auth.apple")}</span>
-      </button>
+      {showApple && (
+        <button type="button" className="btn btn-social btn-apple" disabled={disabled} onClick={() => onSignIn("apple")}>
+          <AppleMark />
+          <span>{t("auth.apple")}</span>
+        </button>
+      )}
     </div>
   );
 }
