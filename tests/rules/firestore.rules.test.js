@@ -222,6 +222,47 @@ describe("student", () => {
       const completed = Object.fromEntries(Array.from({ length: 61 }, (_, i) => [i + 1, Timestamp.now()]));
       await assertFails(setDoc(doc(db("studentA"), "progress", "studentA"), { completed, updatedAt: serverTimestamp() }));
     });
+
+    // Regression: progress values and keys used to be unchecked — a student could store
+    // junk (up to the 1 MB document limit) that every teacher's roster then downloads,
+    // backdate completions, or mark lessons that don't exist.
+    const mine = () => doc(db("studentA"), "progress", "studentA");
+    const mark = (key, value = serverTimestamp(), updatedAt = serverTimestamp()) =>
+      setDoc(mine(), { completed: { [key]: value }, updatedAt }, { merge: true });
+
+    it("ALLOW: first progress write creates the document", async () => {
+      await env.withSecurityRulesDisabled((ctx) => deleteDoc(doc(ctx.firestore(), "progress", "studentA")));
+      await assertSucceeds(mark(60));
+    });
+    it("DENY: a lesson id outside 1..60", async () => {
+      await assertFails(mark(61));
+      await assertFails(mark(0));
+      await assertFails(mark("abc"));
+    });
+    it("DENY: a completion value that is not the server time", async () => {
+      await assertFails(mark(5, "x".repeat(10000)));
+      await assertFails(mark(5, true));
+      await assertFails(mark(5, Timestamp.fromDate(new Date("2020-01-01")))); // backdated
+    });
+    it("re-marking a completed lesson: server time ALLOWED (retries), any other time DENIED", async () => {
+      // lesson 1 is already completed in the fixture
+      await assertSucceeds(mark(1));
+      await assertFails(mark(1, Timestamp.fromDate(new Date("2020-01-01"))));
+    });
+    it("DENY: updatedAt that is not the server time", async () => {
+      await assertFails(mark(5, serverTimestamp(), "yesterday"));
+      await assertFails(mark(5, serverTimestamp(), Timestamp.fromDate(new Date("2020-01-01"))));
+      await assertFails(setDoc(mine(), { completed: { 5: serverTimestamp() } }, { merge: true }));
+    });
+    it("DENY: replacing the whole map with forged completions", async () => {
+      const forged = { 1: Timestamp.now(), 2: Timestamp.now(), 3: Timestamp.now() };
+      await assertFails(setDoc(mine(), { completed: forged, updatedAt: serverTimestamp() }));
+    });
+    it("ALLOW: several lessons marked in one write, all at server time", async () => {
+      await assertSucceeds(
+        setDoc(mine(), { completed: { 2: serverTimestamp(), 3: serverTimestamp() }, updatedAt: serverTimestamp() }, { merge: true })
+      );
+    });
   });
 
   describe("submissions", () => {

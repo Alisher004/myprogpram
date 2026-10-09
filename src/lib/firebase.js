@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+import { ReCaptchaEnterpriseProvider, initializeAppCheck } from "firebase/app-check";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
 import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
 
@@ -23,4 +24,13 @@ export const db = app ? getFirestore(app) : null;
 if (app && import.meta.env.VITE_USE_EMULATORS === "true") {
   connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
   connectFirestoreEmulator(db, "127.0.0.1", 8080);
+}
+
+// App Check: Firestore/Auth accept requests only from this site (reCAPTCHA Enterprise,
+// invisible to users). Off until a site key is set. In `npm run dev` the SDK prints a
+// debug token to the console — register it in Firebase Console → App Check → Manage debug tokens.
+const appCheckKey = import.meta.env.VITE_RECAPTCHA_ENTERPRISE_KEY;
+if (app && appCheckKey && import.meta.env.VITE_USE_EMULATORS !== "true") {
+  if (import.meta.env.DEV) self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+  initializeAppCheck(app, { provider: new ReCaptchaEnterpriseProvider(appCheckKey), isTokenAutoRefreshEnabled: true });
 }
