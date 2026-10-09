@@ -9,11 +9,12 @@ import LanguageSelect from "../../components/LanguageSelect";
 import { PageLoader } from "../../auth/RequireRole";
 import { auth } from "../../lib/firebase";
 import PasswordResetForm from "./PasswordResetForm";
+import SocialSignIn from "../../components/SocialSignIn";
 
 // portal: which role this form is for. Only the student portal offers sign-up.
 function LoginForm({ portal, initialMode }) {
   const { t } = useI18n();
-  const { signInWithGoogle, signInWithEmail, signUpStudent } = useAuth();
+  const { signInWithGoogle, signInWithApple, signInWithEmail, signUpStudent } = useAuth();
   const navigate = useNavigate();
   const from = useLocation().state?.from;
   const canSignUp = portal === "student";
@@ -67,11 +68,11 @@ function LoginForm({ portal, initialMode }) {
   return (
     <>
       <h1>{t(mode === "signup" ? "auth.signupTitle" : `auth.portal.${portal}.title`)}</h1>
-      <p className="auth-lead">{t(mode === "signup" ? "auth.signupLead" : `auth.portal.${portal}.lead`)}</p>
 
-      <button type="button" className="btn btn-outline btn-block" disabled={pending} onClick={() => run(() => signInWithGoogle(portal))}>
-        {t("auth.google")}
-      </button>
+      <SocialSignIn
+        disabled={pending}
+        onSignIn={(provider) => run(() => (provider === "apple" ? signInWithApple(portal) : signInWithGoogle(portal)))}
+      />
 
       <div className="auth-divider">{t("auth.or")}</div>
 
@@ -142,24 +143,27 @@ export default function LoginPage({ portal = "student", initialMode = "login" })
     if (user && profile && auth?.currentUser) return <Navigate to={homeFor(profile.role)} replace />;
   }
 
+  // Laptop: brand on the left, form on the right. Phone: stacked, brand on top.
   const card = (
-    <div className="card auth-card">
-      <div className="auth-logo">
-        <Logo tone="light" size="lg" tagline={portal === "student"} />
+    <div className="auth-split">
+      <div className="auth-brand">
+        <Logo tone="light" size="lg" tagline />
+        {portal !== "student" && <p className="auth-portal-badge">{t(`roles.${portal}`)}</p>}
       </div>
-      {portal !== "student" && <p className="auth-portal-badge">{t(`roles.${portal}`)}</p>}
-      {enabled ? (
-        <LoginForm key={initialMode} portal={portal} initialMode={initialMode} />
-      ) : (
-        <p className="form-error">{t("auth.disabled")}</p>
-      )}
+      <div className="auth-card">
+        {enabled ? (
+          <LoginForm key={initialMode} portal={portal} initialMode={initialMode} />
+        ) : (
+          <p className="form-error">{t("auth.disabled")}</p>
+        )}
+      </div>
     </div>
   );
 
   if (portal === "student") {
     return (
       <section className="tight">
-        <div className="container auth-wrap">{card}</div>
+        <div className="container">{card}</div>
       </section>
     );
   }

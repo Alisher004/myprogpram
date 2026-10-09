@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, fireEvent, screen } from "@testing-library/react";
 import kg from "../../src/i18n/kg.json";
 import { ROUTES } from "../../src/lib/routes";
@@ -6,6 +6,7 @@ import { Route, renderAt } from "./helpers";
 
 const state = vi.hoisted(() => ({ value: null }));
 vi.mock("/src/auth/AuthContext.jsx", () => ({ useAuth: () => state.value, AuthProvider: ({ children }) => children }));
+vi.mock("/src/lib/features.js", () => ({ get APPLE_SIGNIN_ENABLED() { return globalThis.__appleOn ?? false; } }));
 const { default: LoginPage } = await import("../../src/pages/auth/LoginPage");
 const firebase = await import("/src/lib/firebase.js"); // the inert mock from setup.js
 
@@ -18,6 +19,7 @@ const base = (overrides = {}) => ({
   portalPending: false,
   signInWithEmail: vi.fn(),
   signInWithGoogle: vi.fn(),
+  signInWithApple: vi.fn(),
   signUpStudent: vi.fn(),
   ...overrides,
 });
@@ -136,4 +138,44 @@ describe("LoginPage", () => {
     expect(document.querySelector("form")).toBeTruthy();
     firebase.auth.currentUser = null;
   });
+
+  it.each([ROUTES.login, ROUTES.register, ROUTES.teacher.login, ROUTES.admin.login])(
+    "%s shows Google sign-in, no extra lead text, and no Apple button while it is switched off",
+    (path) => {
+      state.value = base();
+      renderAt(path, routes);
+      expect(screen.getByRole("button", { name: kg.auth.google })).toBeTruthy();
+      expect(screen.queryByRole("button", { name: kg.auth.apple })).toBeNull();
+      expect(document.querySelector(".auth-lead")).toBeNull();
+    }
+  );
 });
+
+describe("LoginPage with Apple sign-in switched on", () => {
+  beforeEach(() => (globalThis.__appleOn = true));
+  afterEach(() => (globalThis.__appleOn = false));
+
+  it("Apple sign-in goes through the same portal and double-click guard", async () => {
+    let release;
+    const apple = vi.fn(() => new Promise((r) => (release = r)));
+    state.value = base({ signInWithApple: apple });
+    renderAt(ROUTES.teacher.login, routes);
+    const button = screen.getByRole("button", { name: kg.auth.apple });
+    act(() => {
+      fireEvent.click(button);
+      fireEvent.click(button);
+    });
+    expect(apple).toHaveBeenCalledTimes(1);
+    expect(apple).toHaveBeenCalledWith("teacher");
+    expect(screen.getByRole("button", { name: kg.auth.google }).disabled).toBe(true);
+    await act(async () => release());
+  });
+
+  it("an account registered with another method gets a clear message", async () => {
+    state.value = base({ signInWithApple: vi.fn().mockRejectedValue({ code: "auth/account-exists-with-different-credential" }) });
+    renderAt(ROUTES.login, routes);
+    await act(async () => fireEvent.click(screen.getByRole("button", { name: kg.auth.apple })));
+    expect(screen.getByRole("alert").textContent).toBe(kg.auth.errors["auth/account-exists-with-different-credential"]);
+  });
+});
+

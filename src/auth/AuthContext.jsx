@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import {
   GoogleAuthProvider,
+  OAuthProvider,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   sendEmailVerification,
@@ -30,7 +31,8 @@ function portalError(code, role) {
 // Teachers/admins are promoted by an admin; Firestore rules forbid self-promotion.
 async function createStudentDoc(user, name) {
   const profile = {
-    name: name || user.displayName || user.email.split("@")[0],
+    // Apple may share no display name (and a private-relay email), so fall back step by step
+    name: name || user.displayName || user.email?.split("@")[0] || "Student",
     email: user.email,
     photoURL: user.photoURL || null,
     role: "student",
@@ -145,6 +147,17 @@ export function AuthProvider({ children }) {
       portalPending,
       signInWithGoogle: (portal) =>
         guarded(() => withPortal(portal, () => signInWithPopup(auth, new GoogleAuthProvider()))),
+      // Sign in with Apple (iCloud). Asks for email + name; the name only arrives on the
+      // very first Apple sign-in, so createStudentDoc falls back to the email prefix.
+      signInWithApple: (portal) =>
+        guarded(() =>
+          withPortal(portal, () => {
+            const provider = new OAuthProvider("apple.com");
+            provider.addScope("email");
+            provider.addScope("name");
+            return signInWithPopup(auth, provider);
+          })
+        ),
       signInWithEmail: (portal, email, password) =>
         guarded(() => withPortal(portal, () => signInWithEmailAndPassword(auth, email, password))),
       // Self-registration exists only for students. The verification email is
